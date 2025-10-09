@@ -1,0 +1,60 @@
+@font-face {
+    font-family: 'Red Rose';
+    src: url('RedRose-Light.eot');
+    src: local('Red Rose Light'), local('RedRose-Light'),
+        url('RedRose-Light.eot?#iefix') format('embedded-opentype'),
+        url('RedRose-Light.woff2') format('woff2'),
+        url('RedRose-Light.woff') format('woff'),
+        url('RedRose-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Red Rose';
+    src: url('RedRose-Regular.eot');
+    src: local('Red Rose Regular'), local('RedRose-Regular'),
+        url('RedRose-Regular.eot?#iefix') format('embedded-opentype'),
+        url('RedRose-Regular.woff2') format('woff2'),
+        url('RedRose-Regular.woff') format('woff'),
+        url('RedRose-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Red Rose';
+    src: url('RedRose-Medium.eot');
+    src: local('Red Rose Medium'), local('RedRose-Medium'),
+        url('RedRose-Medium.eot?#iefix') format('embedded-opentype'),
+        url('RedRose-Medium.woff2') format('woff2'),
+        url('RedRose-Medium.woff') format('woff'),
+        url('RedRose-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Red Rose';
+    src: url('RedRose-Bold.eot');
+    src: local('Red Rose Bold'), local('RedRose-Bold'),
+        url('RedRose-Bold.eot?#iefix') format('embedded-opentype'),
+        url('RedRose-Bold.woff2') format('woff2'),
+        url('RedRose-Bold.woff') format('woff'),
+        url('RedRose-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Red Rose';
+    src: url('RedRose-SemiBold.eot');
+    src: local('Red Rose SemiBold'), local('RedRose-SemiBold'),
+        url('RedRose-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('RedRose-SemiBold.woff2') format('woff2'),
+        url('RedRose-SemiBold.woff') format('woff'),
+        url('RedRose-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+

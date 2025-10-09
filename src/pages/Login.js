@@ -1,0 +1,73 @@
+import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import apiClient from '../api/apiClient';
+
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        try {
+            const response = await apiClient.post('/api/login', {
+                email: email,
+                password: password,
+            });
+
+            const { token } = response.data.data;
+
+            if (token) {
+                // Сохраняем токен в localStorage.
+                // Перехватчик в apiClient автоматически подхватит его для будущих запросов.
+                localStorage.setItem('authToken', token);
+
+                // Перенаправляем пользователя на защищенную страницу, например, на его профиль
+                // Замените '/profile' на нужный вам маршрут после входа
+                navigate('/profile');
+            }
+
+        } catch (err) {
+            console.error('Ошибка входа:', err);
+            setError('Неверный email или пароль.');
+        }
+    };
+
+    return (
+        <main className="reg-main">
+            <div className="registration-container">
+                <div className="registration-title">ВХОД</div>
+                <div className="registration-subtitle">В BUILDSERVICE</div>
+
+                <form onSubmit={handleLogin}>
+                    <div className="form-group">
+                        <label htmlFor="email" className="form-label">Электронная почта*</label>
+                        <input type="email" id="email" className="form-input" placeholder="Введите вашу почту" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password" className="form-label">Пароль*</label>
+                        <input type="password" id="password" className="form-input" placeholder="Введите пароль" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+
+                    {error && <p className="error-message" style={{color: 'red', textAlign: 'center'}}>{error}</p>}
+
+                    <div className="remember-me">
+                        {/* Функционал "Запомнить меня" можно реализовать позже */}
+                    </div>
+
+                    <button type="submit" className="register-button">ВОЙТИ</button>
+
+                    <Link to="/" className="already-registered" style={{display: 'block', textAlign: 'center', marginTop: '15px'}}>
+                        Еще не зарегистрированы?
+                    </Link>
+                </form>
+            </div>
+        </main>
+    );
+};
+
+export default Login;

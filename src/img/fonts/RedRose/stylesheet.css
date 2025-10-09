@@ -1,0 +1,27 @@
+
+@font-face {
+    font-family: 'Red Rose';
+    src: url('RedRose-Regular.eot');
+    src: local('Red Rose Regular'), local('RedRose-Regular'),
+        url('RedRose-Regular.eot?#iefix') format('embedded-opentype'),
+        url('RedRose-Regular.woff2') format('woff2'),
+        url('RedRose-Regular.woff') format('woff'),
+        url('RedRose-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Red Rose';
+    src: url('RedRose-Bold.eot');
+    src: local('Red Rose Bold'), local('RedRose-Bold'),
+        url('RedRose-Bold.eot?#iefix') format('embedded-opentype'),
+        url('RedRose-Bold.woff2') format('woff2'),
+        url('RedRose-Bold.woff') format('woff'),
+        url('RedRose-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+

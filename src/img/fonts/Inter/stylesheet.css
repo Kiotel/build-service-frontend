@@ -1,0 +1,14 @@
+
+
+@font-face {
+    font-family: 'Inter';
+    src: url('Inter-ExtraBold.eot');
+    src: local('Inter Extra Bold'), local('Inter-ExtraBold'),
+        url('Inter-ExtraBold.eot?#iefix') format('embedded-opentype'),
+        url('Inter-ExtraBold.woff2') format('woff2'),
+        url('Inter-ExtraBold.woff') format('woff'),
+        url('Inter-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
