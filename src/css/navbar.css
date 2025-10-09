@@ -1,0 +1,148 @@
+/* --- Base Navbar Styles --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 60px;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    height: 90px;
+    width: 100%;
+    z-index: 1000;
+
+    /* Makes the navbar stick to the top of the screen */
+    position: sticky;
+    top: 0;
+}
+
+.navbar-logo a {
+    font-size: 40px;
+    font-weight: bold;
+    color: #f5cc4a;
+    text-decoration: none;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.navbar-links a {
+    font-size: 22px;
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s;
+    padding: 10px 15px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.navbar-links a:hover {
+    color: #2a6bf3;
+}
+
+.register-button {
+    background-color: #f5cc4a;
+    color: #0e0d0d !important;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 22px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.register-button:hover {
+    background-color: #e5bc3a;
+}
+
+/* --- Hamburger Menu Icon --- */
+.navbar-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+    z-index: 1001; /* Must be on top of the menu */
+}
+
+.navbar-toggle .bar {
+    height: 3px;
+    width: 100%;
+    background-color: #333;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+
+/* --- Responsive Styles --- */
+
+/* Smaller Desktops / Large Tablets */
+@media (max-width: 1200px) {
+    .navbar {
+        padding: 0 30px;
+    }
+    .navbar-links {
+        gap: 15px;
+    }
+    .navbar-links a {
+        font-size: 18px;
+        padding: 8px 12px;
+    }
+    .register-button {
+        font-size: 18px;
+        padding: 12px 24px;
+    }
+}
+
+/* Tablets and Mobile Phones */
+@media (max-width: 1024px) {
+    .navbar-toggle {
+        display: flex;
+    }
+
+    .navbar-links {
+        position: fixed; /* Use fixed to scroll independently */
+        top: 0;
+        right: 0;
+        width: 100%;
+        max-width: 350px;
+        height: 100vh; /* Full screen height */
+
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+
+        background-color: white;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .navbar-links.active {
+        transform: translateX(0);
+    }
+
+    .navbar-links a {
+        font-size: 24px;
+    }
+
+    .register-button {
+        font-size: 24px;
+    }
+
+    /* Animate hamburger to an "X" when menu is active */
+    .navbar-toggle.active .bar:nth-child(1) {
+        transform: translateY(11px) rotate(45deg);
+    }
+    .navbar-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    .navbar-toggle.active .bar:nth-child(3) {
+        transform: translateY(-11px) rotate(-45deg);
+    }
+}

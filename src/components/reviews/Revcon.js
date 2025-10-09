@@ -3,9 +3,6 @@ const Revcon = () => {
     return ( 
     <main className="reviews-main">
         <div className="reviews-header">
-            <div className="write-review-btn">
-                <a href="#">Написать отзыв</a>
-            </div>
             <h2 className="reviews-title">ОТЗЫВЫ</h2>
         </div>
         
