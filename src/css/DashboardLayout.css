@@ -1,0 +1,55 @@
+.dashboard-layout {
+  /* Styles for the overall layout container if needed */
+}
+
+.top-bar {
+  background-color: #2c2c2c;
+  color: white;
+  padding: 8px 60px;
+  font-size: 14px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 60px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.header-logo a {
+  background-color: #f5c93d;
+  color: #333;
+  padding: 8px 16px;
+  font-weight: bold;
+  font-size: 20px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.header-nav { display: flex; gap: 30px; }
+.header-nav a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 500;
+  padding-bottom: 5px;
+  border-bottom: 2px solid transparent;
+}
+.header-nav a.active {
+  color: #333;
+  border-bottom: 2px solid #333;
+}
+.wishlist-button {
+  background: none; border: none; color: #ff4d6d;
+  font-size: 24px; cursor: pointer; display: flex;
+}
+.dashboard-page-content {
+  padding: 40px 60px; /* Provides padding for the pages rendered inside */
+}

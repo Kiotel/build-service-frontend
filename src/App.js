@@ -1,60 +1,74 @@
 import "./css/styles.css";
-import {BrowserRouter as Router, Routes, Route, useLocation} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from "react-router-dom";
+
+// Layouts and Context (These paths are correct)
+import DashboardLayout from "./layouts/DashboardLayout";
+import { AuthProvider } from "./context/AuthContext";
+
+// --- ALL PATHS CORRECTED TO MATCH YOUR FOLDER STRUCTURE ---
+import Certificats from "./components/certificates/Certcon"; // Assuming Certificates.js is in /components/certificates
+import Gallery from "././components/gallerycon/Gallerycon"; // etc.
+import Articles from "./components/articles/Artcon";
+import Reviews from "./components/reviews/Revcon";
+import About from "./components/about/Aboutcon";
+import Call from "./components/call/Callcon";
+
+import Signup from "./components/signup/Signcon.js";
+import Login from "./components/login/Login.js";
+import CustomerDashboard from "./components/dashboard/Dashboard.js";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.js";
+
+// UI Components
 import Navbar from "./components/navbar/Navbar";
-import Logos from "./components/logos/Logos";
-import Home from "./pages/Home";
-import Certificats from "./pages/Certificates";
-import Gallery from "./pages/Gallery";
-import Articles from "./pages/Articles";
-import Reviews from "./pages/Reviews";
-import About from "./pages/About";
-import Signup from "./pages/Signup";
-import Artcon from "./components/articles/Artcon";
-import Call from "./pages/Call";
 import Callbtn from "./components/callbtn/Callbtn";
-import Login from "./pages/Login";
+import Home from "./pages/Home";
+import PublicOnlyRoute from "./components/PublicOnlyRoute";
 
+// Layout for all public-facing pages
+const PublicLayout = () => {
+    const location = useLocation();
+    const showCallButton = location.pathname === '/';
 
-
-
-
+    return (
+        <>
+            <Navbar />
+            {showCallButton && <Callbtn />}
+            <main><Outlet /></main>
+        </>
+    );
+};
 
 function App() {
-  return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <MainContent />
-      </div>
-    </Router>
-  );
+    return (
+        <AuthProvider>
+            <Router>
+                <div className="App">
+                    <Routes>
+                        {/* DASHBOARD ROUTES */}
+                        <Route
+                            path="/dashboard"
+                            element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}
+                        >
+                            <Route index element={<CustomerDashboard />} />
+                        </Route>
+
+                        {/* PUBLIC ROUTES */}
+                        <Route path="/" element={<PublicLayout />}>
+                            <Route index element={<Home />} />
+                            <Route path="certificats" element={<Certificats />} />
+                            <Route path="gallery" element={<Gallery />} />
+                            <Route path="articles" element={<Articles />} />
+                            <Route path="reviews" element={<Reviews />} />
+                            <Route path="about" element={<About />} />
+                            <Route path="call" element={<Call />} />
+                            <Route path="login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+                            <Route path="signup" element={<PublicOnlyRoute><Signup /></PublicOnlyRoute>} />
+                        </Route>
+                    </Routes>
+                </div>
+            </Router>
+        </AuthProvider>
+    );
 }
-
-// Вспомогательный компонент для условного рендера кнопки
-const MainContent = () => {
-  const location = useLocation();
-
-  // Показываем кнопку только на главной странице
-  const showCallButton = location.pathname === '/';
-
-  return (
-    <>
-      {showCallButton && <Callbtn />}
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/certificats" element={<Certificats />} />
-          <Route path="/gallery" element={<Gallery />} />
-          <Route path="/articles" element={<Artcon />} />
-          <Route path="/reviews" element={<Reviews />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/call" element={<Call />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </main>
-    </>
-  );
-};
 
 export default App;
