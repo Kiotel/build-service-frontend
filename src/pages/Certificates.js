@@ -1,8 +1,10 @@
 import Certcon from "../components/certificates/Certcon";
-const Certificats = () => {
-    return (  
-        <Certcon/>
+
+// Keep component name and default export aligned to English spelling
+const Certificates = () => {
+    return (
+        <Certcon />
     );
-}
- 
-export default Certificats;
+};
+
+export default Certificates;

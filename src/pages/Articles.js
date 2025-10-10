@@ -2,9 +2,8 @@ import Artcon from "../components/articles/Artcon";
 
 
 const Articles = () => {
-    return 
-    (  
-        <Artcon/> 
+    return (
+        <Artcon/>
     );
 }
  

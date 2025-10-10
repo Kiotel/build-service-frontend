@@ -7,11 +7,9 @@
     color: white;
     padding: 8px 60px;
     font-size: 14px;
-
-    /* --- ДОБАВЛЕННЫЕ СТИЛИ ДЛЯ РАСПОЛОЖЕНИЯ ЭЛЕМЕНТОВ --- */
     display: flex;
-    justify-content: space-between; /* Располагает элементы по краям */
-    align-items: center; /* Выравнивает по вертикали */
+    justify-content: space-between;
+    align-items: center;
 }
 
 .dashboard-header {
@@ -19,8 +17,9 @@
     justify-content: space-between;
     align-items: center;
     padding: 15px 60px;
-    background-color: white;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
 }
 
 .header-left, .header-right {
@@ -30,13 +29,13 @@
 }
 
 .header-logo a {
-    background-color: #f5c93d;
+    background-color: var(--color-accent);
     color: #333;
     padding: 8px 16px;
     font-weight: bold;
     font-size: 20px;
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 .header-nav { display: flex; gap: 30px; }
@@ -44,34 +43,15 @@
     text-decoration: none;
     color: #555;
     font-weight: 500;
-    padding-bottom: 5px;
+    padding: 6px 2px;
     border-bottom: 2px solid transparent;
+    transition: color .2s ease, border-color .2s ease;
 }
-.header-nav a.active {
-    color: #333;
-    border-bottom: 2px solid #333;
-}
-.wishlist-button {
-    background: none; border: none; color: #ff4d6d;
-    font-size: 24px; cursor: pointer; display: flex;
-}
-.dashboard-page-content {
-    padding: 40px 60px;
-}
+.header-nav a:hover { color: var(--color-primary); border-color: rgba(42,107,243,.3); }
+.header-nav a.active { color: #333; border-bottom-color: #333; }
+.wishlist-button { background: none; border: none; color: #ff4d6d; font-size: 24px; cursor: pointer; display: flex; }
+.dashboard-page-content { padding: 40px 60px; }
 
 /* --- НОВЫЕ СТИЛИ ДЛЯ КНОПКИ ВЫХОДА --- */
-.logout-button {
-    background: none;
-    border: none;
-    color: #aaa; /* Слегка серый цвет для ненавязчивости */
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-    transition: color 0.2s ease-in-out;
-}
-
-.logout-button:hover {
-    color: white; /* Становится белой при наведении */
-    text-decoration: underline;
-}
+.logout-button { background: none; border: none; color: #aaa; font-size: 14px; font-weight: bold; cursor: pointer; text-decoration: none; transition: color 0.2s ease-in-out; }
+.logout-button:hover { color: white; text-decoration: underline; }

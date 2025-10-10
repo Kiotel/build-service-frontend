@@ -22,5 +22,5 @@ const PublicOnlyRoute = ({children}) => {
     return children;
 }
 
-export default PublicOnlyRoute
+export default PublicOnlyRoute;
 

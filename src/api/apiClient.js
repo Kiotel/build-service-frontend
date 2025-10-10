@@ -1,14 +1,21 @@
 import axios from 'axios';
 
-// URL вашего бэкенда
-export const API_BASE_URL = 'http://95.174.100.224:10002';
+// Prefer env-based config if available (CRA style)
+const envBaseUrl =
+    (typeof process !== 'undefined' && process.env && process.env.REACT_APP_API_BASE_URL)
+        ? process.env.REACT_APP_API_BASE_URL
+        : null;
 
-// Создаем экземпляр axios с базовой конфигурацией
+// Fallback to existing hardcoded URL if env not provided
+export const API_BASE_URL = envBaseUrl || 'http://95.174.100.224:10002';
+
+// Create axios instance with sane defaults
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
+    timeout: 15000,
 });
 
 // --- ВОТ ЭТА ЧАСТЬ ДОБАВЛЯЕТ ТОКЕН ---
@@ -29,6 +36,20 @@ apiClient.interceptors.request.use(
     },
     (error) => {
         // В случае ошибки, отклоняем promise
+        return Promise.reject(error);
+    }
+);
+
+// Basic response interceptor to catch 401s and optionally clear auth
+apiClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error && error.response && error.response.status === 401) {
+            // Best-effort sign-out to recover from invalid tokens
+            try {
+                localStorage.removeItem('authToken');
+            } catch (_) {}
+        }
         return Promise.reject(error);
     }
 );

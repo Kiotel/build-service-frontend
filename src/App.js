@@ -1,5 +1,5 @@
 import "./css/styles.css";
-import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // --- МАКЕТЫ И КОНТЕКСТ ---
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -8,7 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 // --- КОМПОНЕНТЫ СТРАНИЦ ---
 // (Все импорты приведены к единому стилю для ясности)
 import Home from "./pages/Home";
-import Certificats from "./pages/Certificates";
+import Certificates from "./pages/Certificates";
 import Gallery from "./pages/Gallery";
 import Articles from "./pages/Articles";
 import Reviews from "./pages/Reviews";
@@ -25,23 +25,11 @@ import PublicOnlyRoute from "./components/PublicOnlyRoute"; // Предпола�
 import DashboardRedirect from './components/DashboardRedirect'; // <-- ДОБАВЛЕН ИМПОРТ
 
 // --- КОМПОНЕНТЫ ИНТЕРФЕЙСА ---
-import Navbar from "./components/navbar/Navbar";
-import Callbtn from "./components/callbtn/Callbtn";
+import PublicLayout from "./layouts/PublicLayout";
 import CustomerDashboard from "./components/dashboard/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
-// Макет для всех публичных страниц (хедер, футер и т.д.)
-const PublicLayout = () => {
-    const location = useLocation();
-    const showCallButton = location.pathname === '/';
-    return (
-        <>
-            <Navbar />
-            {showCallButton && <Callbtn />}
-            <main><Outlet /></main>
-        </>
-    );
-};
+// Макет вынесен в layouts/PublicLayout
 
 function App() {
     return (
@@ -73,7 +61,9 @@ function App() {
                         {/* --- ПУБЛИЧНЫЕ МАРШРУТЫ --- */}
                         <Route path="/" element={<PublicLayout />}>
                             <Route index element={<Home />} />
-                            <Route path="certificats" element={<Certificats />} />
+                            {/* Backward compatibility: handle both spellings */}
+                            <Route path="certificats" element={<Certificates />} />
+                            <Route path="certificates" element={<Certificates />} />
                             <Route path="gallery" element={<Gallery />} />
                             <Route path="articles" element={<Articles />} />
                             <Route path="reviews" element={<Reviews />} />

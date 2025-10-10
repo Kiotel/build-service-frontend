@@ -4,13 +4,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 60px;
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-md);
     height: 90px;
     width: 100%;
     z-index: 1000;
-
-    /* Makes the navbar stick to the top of the screen */
     position: sticky;
     top: 0;
 }
@@ -18,7 +16,7 @@
 .navbar-logo a {
     font-size: 40px;
     font-weight: bold;
-    color: #f5cc4a;
+    color: var(--color-accent);
     text-decoration: none;
 }
 
@@ -30,32 +28,29 @@
 
 .navbar-links a {
     font-size: 22px;
-    color: black;
+    color: var(--color-text);
     text-decoration: none;
-    transition: color 0.3s;
+    transition: color 0.2s ease, background-color .2s ease;
     padding: 10px 15px;
     border-radius: 8px;
     white-space: nowrap;
 }
 
-.navbar-links a:hover {
-    color: #2a6bf3;
-}
+.navbar-links a:hover { color: var(--color-primary); background-color: rgba(42,107,243,.06); }
 
 .register-button {
-    background-color: #f5cc4a;
+    background-color: var(--color-accent);
     color: #0e0d0d !important;
     padding: 15px 30px;
     border-radius: 8px;
     font-weight: bold;
     font-size: 22px;
     text-decoration: none;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s ease, transform .05s ease;
 }
 
-.register-button:hover {
-    background-color: #e5bc3a;
-}
+.register-button:hover { background-color: var(--color-accent-600); }
+.register-button:active { transform: translateY(1px); }
 
 /* --- Hamburger Menu Icon --- */
 .navbar-toggle {
@@ -65,13 +60,13 @@
     width: 30px;
     height: 25px;
     cursor: pointer;
-    z-index: 1001; /* Must be on top of the menu */
+    z-index: 1001;
 }
 
 .navbar-toggle .bar {
     height: 3px;
     width: 100%;
-    background-color: #333;
+    background-color: var(--color-text);
     border-radius: 10px;
     transition: all 0.3s ease-in-out;
 }
@@ -104,19 +99,19 @@
     }
 
     .navbar-links {
-        position: fixed; /* Use fixed to scroll independently */
+        position: fixed;
         top: 0;
         right: 0;
         width: 100%;
         max-width: 350px;
-        height: 100vh; /* Full screen height */
+        height: 100vh;
 
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 40px;
 
-        background-color: white;
+        background-color: var(--color-surface);
         box-shadow: -5px 0 15px rgba(0,0,0,0.1);
 
         transform: translateX(100%);
