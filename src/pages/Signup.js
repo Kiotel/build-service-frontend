@@ -1,6 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import apiClient from '../api/apiClient'; // Импортируем наш настроенный клиент
+import { useAuth } from '../context/AuthContext';
 
 const Signcon = () => {
     const [email, setEmail] = useState('');
@@ -9,6 +10,9 @@ const Signcon = () => {
     const [role, setRole] = useState('customer');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+    const { login } = useAuth();
+    const from = location.state?.from?.pathname || '/dashboard';
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -46,8 +50,8 @@ const Signcon = () => {
                 throw new Error('Токен не был получен после входа.');
             }
 
-            // Сохраняем токен. Теперь все последующие запросы через apiClient будут авторизованы.
-            localStorage.setItem('authToken', token);
+            // Авторизуем пользователя в контексте (сохранит токен и подгрузит профиль)
+            await login(token);
 
             // =================================================================
             // ШАГ 3: Создание профиля в зависимости от роли (теперь этот запрос будет с токеном)
@@ -66,7 +70,7 @@ const Signcon = () => {
             // =================================================================
             // ШАГ 4: Перенаправление на защищенную страницу, так как пользователь уже вошел в систему
             // =================================================================
-            navigate('/profile'); // или на любую другую страницу для авторизованных пользователей
+            navigate(from, { replace: true });
 
         } catch (err) {
             console.error('Ошибка регистрации:', err);

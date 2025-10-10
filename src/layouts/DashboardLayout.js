@@ -1,19 +1,35 @@
 import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom'; // Импортируем useNavigate
 import { FaHeart } from 'react-icons/fa';
-
-// This path is correct for your structure. Ensure the file exists.
-import '../css/DashboardLayout.css';
-import { useAuth } from '../context/AuthContext'; // Correct path from /layouts to /context
+import '../css/DashboardLayout.css'; // Убедитесь, что путь верный
+import { useAuth } from '../context/AuthContext'; // Убедитесь, что путь верный
 
 const DashboardLayout = () => {
-    const { user } = useAuth();
+    // Получаем пользователя и функцию logout из нашего контекста
+    const { user, logout } = useAuth();
+    // Получаем функцию для навигации
+    const navigate = useNavigate();
+
+    // --- НОВЫЙ ОБРАБОТЧИК ДЛЯ ВЫХОДА ---
+    const handleLogout = () => {
+        // 1. Вызываем функцию logout из контекста
+        logout();
+        // 2. Перенаправляем пользователя на страницу входа
+        navigate('/login');
+    };
 
     return (
         <div className="dashboard-layout">
             <div className="top-bar">
+                {/* Отображаем имя пользователя */}
                 <span>{user ? user.name : 'Загрузка...'}</span>
+
+                {/* --- НОВАЯ КНОПКА ВЫХОДА --- */}
+                <button onClick={handleLogout} className="logout-button">
+                    Выйти
+                </button>
             </div>
+
             <header className="dashboard-header">
                 <div className="header-left">
                     <div className="header-logo">
@@ -31,7 +47,9 @@ const DashboardLayout = () => {
                     <button className="btn btn-primary">Разместить объявление</button>
                 </div>
             </header>
+
             <main className="dashboard-page-content">
+                {/* Здесь будут рендериться вложенные страницы, такие как CustomerDashboard */}
                 <Outlet />
             </main>
         </div>

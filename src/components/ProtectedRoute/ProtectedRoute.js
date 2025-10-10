@@ -1,18 +1,23 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import {useAuth} from "../../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-    // Check if the auth token exists in localStorage
-    const token = localStorage.getItem('authToken');
+    const { token, loading } = useAuth();
+    const location = useLocation();
 
-    if (!token) {
-        // If no token, redirect to the login page
-        // 'replace' prevents the user from going "back" to the protected page
-        return <Navigate to="/login" replace />;
+    if (loading) {
+        return <div>Загрузка сессии...</div>;
     }
 
-    // If token exists, render the child component (e.g., dashboard)
+    if (!token) {
+        return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+
     return children;
 };
 
 export default ProtectedRoute;
+
+
+

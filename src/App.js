@@ -1,34 +1,39 @@
 import "./css/styles.css";
 import { BrowserRouter as Router, Routes, Route, useLocation, Outlet } from "react-router-dom";
 
-// Layouts and Context (These paths are correct)
+// --- МАКЕТЫ И КОНТЕКСТ ---
 import DashboardLayout from "./layouts/DashboardLayout";
 import { AuthProvider } from "./context/AuthContext";
 
-// --- ALL PATHS CORRECTED TO MATCH YOUR FOLDER STRUCTURE ---
-import Certificats from "./components/certificates/Certcon"; // Assuming Certificates.js is in /components/certificates
-import Gallery from "././components/gallerycon/Gallerycon"; // etc.
-import Articles from "./components/articles/Artcon";
-import Reviews from "./components/reviews/Revcon";
-import About from "./components/about/Aboutcon";
-import Call from "./components/call/Callcon";
+// --- КОМПОНЕНТЫ СТРАНИЦ ---
+// (Все импорты приведены к единому стилю для ясности)
+import Home from "./pages/Home";
+import Certificats from "./pages/Certificates";
+import Gallery from "./pages/Gallery";
+import Articles from "./pages/Articles";
+import Reviews from "./pages/Reviews";
+import About from "./pages/About";
+import Call from "./pages/Call";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import BrigadeDashboard from './pages/BrigadeDashboard';   // <-- ДОБАВЛЕН ИМПОРТ
+import ContractDetailsPage from "./pages/ContractDetailsPage";
+import BrigadeInvitationPage from './pages/BrigadeInvitationPage';
 
-import Signup from "./components/signup/Signcon.js";
-import Login from "./components/login/Login.js";
-import CustomerDashboard from "./components/dashboard/Dashboard.js";
-import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.js";
+// --- КОМПОНЕНТЫ МАРШРУТИЗАЦИИ ---
+import PublicOnlyRoute from "./components/PublicOnlyRoute"; // Предполагается, что путь теперь такой
+import DashboardRedirect from './components/DashboardRedirect'; // <-- ДОБАВЛЕН ИМПОРТ
 
-// UI Components
+// --- КОМПОНЕНТЫ ИНТЕРФЕЙСА ---
 import Navbar from "./components/navbar/Navbar";
 import Callbtn from "./components/callbtn/Callbtn";
-import Home from "./pages/Home";
-import PublicOnlyRoute from "./components/PublicOnlyRoute";
+import CustomerDashboard from "./components/dashboard/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
-// Layout for all public-facing pages
+// Макет для всех публичных страниц (хедер, футер и т.д.)
 const PublicLayout = () => {
     const location = useLocation();
     const showCallButton = location.pathname === '/';
-
     return (
         <>
             <Navbar />
@@ -44,15 +49,28 @@ function App() {
             <Router>
                 <div className="App">
                     <Routes>
-                        {/* DASHBOARD ROUTES */}
+                        {/* --- ЛОГИКА ДАШБОРДА (ПОЛНОСТЬЮ ПЕРЕРАБОТАНА) --- */}
+
+                        {/* 1. Маршрут-распределитель: /dashboard */}
+                        {/* При заходе сюда, компонент DashboardRedirect определит роль и перенаправит */}
                         <Route
                             path="/dashboard"
-                            element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}
-                        >
-                            <Route index element={<CustomerDashboard />} />
+                            element={
+                                <ProtectedRoute>
+                                    <DashboardRedirect />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        {/* 2. Группа маршрутов, использующих макет дашборда */}
+                        {/* Все, что находится внутри, будет защищено и иметь хедер дашборда */}
+                        <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+                            <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+                            <Route path="/brigade-dashboard" element={<BrigadeDashboard />} />
+                            <Route path="/dashboard/projects/:contractId" element={<ContractDetailsPage />} />
                         </Route>
 
-                        {/* PUBLIC ROUTES */}
+                        {/* --- ПУБЛИЧНЫЕ МАРШРУТЫ --- */}
                         <Route path="/" element={<PublicLayout />}>
                             <Route index element={<Home />} />
                             <Route path="certificats" element={<Certificats />} />
@@ -63,6 +81,7 @@ function App() {
                             <Route path="call" element={<Call />} />
                             <Route path="login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
                             <Route path="signup" element={<PublicOnlyRoute><Signup /></PublicOnlyRoute>} />
+                            <Route path="/join-project/:contractId" element={<BrigadeInvitationPage />} />
                         </Route>
                     </Routes>
                 </div>

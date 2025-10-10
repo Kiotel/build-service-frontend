@@ -1,0 +1,95 @@
+.contract-details-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.contract-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+.contract-header h1 { font-size: 28px; color: #333; margin: 0; }
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+.detail-item strong { font-size: 14px; color: #555; margin-bottom: 8px; }
+.detail-item span { font-size: 18px; color: #222; }
+.header-input {
+    font-size: 28px; font-weight: bold; color: #333;
+    border: 2px solid #007bff; border-radius: 8px; padding: 8px 12px; width: 70%;
+}
+.form-input {
+    font-size: 16px; padding: 8px 12px; border: 1px solid #ccc;
+    border-radius: 6px; width: 100%;
+}
+.form-input:focus {
+    border-color: #007bff; outline: none; box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+.edit-actions {
+    margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;
+    display: flex; justify-content: flex-end; align-items: center; gap: 15px;
+}
+.save-error { color: #dc3545; font-weight: bold; margin-right: auto; }
+.status {
+    font-weight: bold; padding: 4px 10px; border-radius: 12px; font-size: 14px;
+    display: inline-block; width: fit-content;
+}
+.status.active { color: #28a745; background-color: #eaf6ec; }
+.status.completed { color: #6c757d; background-color: #f1f3f5; }
+.page-status { text-align: center; font-size: 18px; color: #666; padding: 50px; }
+.page-status.error { color: #dc3545; }
+.btn {
+    text-decoration: none; font-weight: bold; padding: 10px 20px;
+    border-radius: 8px; border: none; cursor: pointer; font-size: 14px;
+}
+.btn.btn-secondary { background-color: #f1f3f5; color: #333; }
+.btn.btn-primary { background-color: #007bff; color: white; }
+.invitation-action {
+    margin-top: 30px; padding: 20px; background-color: #e7f3ff;
+    border: 1px solid #b3d7ff; border-radius: 8px; text-align: center;
+}
+.invitation-action p { margin: 0 0 15px 0; color: #004085; font-size: 16px; }
+.btn.btn-success { background-color: #28a745; color: white; font-size: 16px; }
+.invitation-url-box { display: flex; margin-top: 15px; gap: 10px; }
+.invitation-url-box input {
+    flex-grow: 1; padding: 10px; font-size: 16px; border: 1px solid #ccc;
+    border-radius: 6px; background-color: #f8f9fa;
+}
+
+/* ... все ваши существующие стили для этой страницы ... */
+
+/* --- ДОБАВИТЬ ЭТИ СТИЛИ В КОНЕЦ ФАЙЛА --- */
+
+/* Обертка для кнопок в заголовке для правильного расположения */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Расстояние между кнопками */
+}
+
+/* Стиль для кнопки "Завершить проект" */
+.btn.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Стиль для кнопки "Возобновить проект" */
+.btn.btn-warning {
+    background-color: #ffc107;
+    color: #212529; /* Темный текст для лучшей читаемости на желтом */
+}

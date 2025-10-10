@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import '../../css/CustomerDashboard.css'; // Убедитесь, что путь верный
-import apiClient from '../../api/apiClient'; // Убедитесь, что путь верный
-import { useAuth } from '../../context/AuthContext'; // Убедитесь, что путь верный
-import Modal from '../modal/Modal'; // Убедитесь, что путь верный
+import '../../css/CustomerDashboard.css';
+import {useAuth} from "../../context/AuthContext";
+import apiClient from "../../api/apiClient";
+import Modal from "../modal/Modal";
 
 const wavingHandImageUrl = 'https://em-content.zobj.net/source/apple/354/waving-hand_1f44b.png';
 
@@ -22,7 +22,7 @@ const CustomerDashboard = () => {
 
     const fetchCustomerProjects = useCallback(async () => {
         if (!user || !user.customer_id) {
-            if (user && !user.customer_id) setError("Этот пользователь не является заказчиком.");
+            if (user && !user.customer_id) setError("This user is not a customer.");
             setIsLoading(false);
             return;
         }
@@ -53,23 +53,17 @@ const CustomerDashboard = () => {
         setIsCreating(true);
         setCreateError(null);
         try {
-            // --- ГЛАВНОЕ ИЗМЕНЕНИЕ ЗДЕСЬ ---
-            // Создаем объект payload, который ЯВНО включает ВСЕ поля из DTO.
             const projectPayload = {
                 name: newProjectName,
-                start_date: new Date().toISOString(), // Обязательное поле
-                end_date: null, // Явно указываем null
-                brigade_id: null  // Явно указываем null
+                start_date: new Date().toISOString(),
+                end_date: null,
+                brigade_id: null
             };
-
-            // Отправляем полный объект на сервер
             await apiClient.post('/api/contracts', projectPayload);
-
             setNewProjectName('');
             setIsModalOpen(false);
-            await fetchCustomerProjects(); // Обновляем список проектов
+            await fetchCustomerProjects();
         } catch (err) {
-            console.error("Failed to create project:", err);
             setCreateError("Не удалось создать проект. Попробуйте снова.");
         } finally {
             setIsCreating(false);
@@ -99,12 +93,14 @@ const CustomerDashboard = () => {
                                 {projects.length > 0 ? (
                                     projects.map((project) => (
                                         <li key={project.id}>
-                                            <button
+                                            {/* --- MODIFIED THIS SECTION --- */}
+                                            <Link
+                                                to={`/dashboard/projects/${project.id}`}
                                                 className={`project-item ${selectedProjectId === project.id ? 'selected' : ''}`}
                                                 onClick={() => setSelectedProjectId(project.id)}
                                             >
                                                 {project.name}
-                                            </button>
+                                            </Link>
                                         </li>
                                     ))
                                 ) : (

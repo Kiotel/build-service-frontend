@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from '../../api/apiClient'; // Ensure this path is correct
-import { useAuth } from '../../context/AuthContext'; // Ensure this path is correct
+import apiClient from '../../api/apiClient';
+import { useAuth } from '../../context/AuthContext';
 
 const Signup = () => {
     const [email, setEmail] = useState('');
@@ -10,65 +10,38 @@ const Signup = () => {
     const [role, setRole] = useState('customer');
     const [error, setError] = useState('');
     const [isRegistering, setIsRegistering] = useState(false);
-
     const navigate = useNavigate();
-    const { login } = useAuth(); // We still need the login function
+    const { login } = useAuth();
 
     const handleRegister = async (e) => {
         e.preventDefault();
-
         if (!name.trim() || !email.trim() || !password.trim()) {
             setError("Пожалуйста, заполните все обязательные поля.");
             return;
         }
-
         setIsRegistering(true);
         setError('');
-
         try {
-            // --- Step 1: Register User (Public Endpoint) ---
-            await apiClient.post('/api/users', {
-                email: email,
-                name: name,
-                password: password,
-            });
-
-            // --- Step 2: Log In to get the token ---
-            // We do a separate login call to get a fresh token
-            const loginResponse = await apiClient.post('/api/login', {
-                email: email,
-                password: password,
-            });
+            await apiClient.post('/api/users', { email, name, password });
+            const loginResponse = await apiClient.post('/api/login', { email, password });
             const token = loginResponse.data.data.token;
-            if (!token) {
-                throw new Error("Login failed immediately after registration.");
-            }
+            if (!token) throw new Error("Login failed after registration.");
 
-            // --- Step 3: Set the Token using AuthContext ---
-            // The login function now fetches the user and makes the token active for apiClient
             const loggedInUser = await login(token);
-            if (!loggedInUser) {
-                throw new Error("Failed to fetch user profile after logging in.");
-            }
+            if (!loggedInUser) throw new Error("Failed to fetch user profile after logging in.");
 
-            // --- Step 4: Create Profile (Protected Endpoint) ---
-            // Now that the token is active, this call will be authenticated
             if (role === 'customer') {
-                await apiClient.post(`/api/customer/${loggedInUser.id}`, { name: name });
+                await apiClient.post(`/api/customer/${loggedInUser.id}`, { name });
             } else if (role === 'builder') {
-                await apiClient.post(`/api/brigades/${loggedInUser.id}`, { name: name, workersAmount: 1 });
+                await apiClient.post(`/api/brigades/${loggedInUser.id}`, { name, workersAmount: 1 });
             }
 
-            // --- Step 5: Navigate to the Dashboard ---
-            navigate('/dashboard');
+            // A new user should ALWAYS go to the dashboard, ignoring any 'from' state.
+            navigate('/dashboard', { replace: true });
 
         } catch (err) {
             console.error("REGISTRATION PROCESS FAILED:", err);
-            if (err.response && err.response.data && err.response.data.message) {
-                setError(err.response.data.message);
-            } else {
-                setError("Произошла ошибка при регистрации. Возможно, такой email уже используется.");
-            }
+            setError(err.response?.data?.message || "Произошла ошибка при регистрации.");
         } finally {
             setIsRegistering(false);
         }
@@ -78,10 +51,8 @@ const Signup = () => {
         <main className="reg-main">
             <div className="registration-container">
                 <div className="registration-title">РЕГИСТРАЦИЯ</div>
-                <div className="registration-subtitle">В BUILDSERVICE</div>
-                <div className="registration-subtitle">ВЫБЕРИТЕ ВАШУ РОЛЬ:</div>
-
                 <form onSubmit={handleRegister}>
+                    {/* Your form JSX here... */}
                     <div className="role-selector">
                         <div className="role-option">
                             <input type="radio" id="customer" name="role" value="customer" checked={role === 'customer'} onChange={() => setRole('customer')} />
@@ -92,7 +63,6 @@ const Signup = () => {
                             <label htmlFor="builder">Строитель</label>
                         </div>
                     </div>
-
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">Ваше имя*</label>
                         <input type="text" id="name" className="form-input" value={name} onChange={(e) => setName(e.target.value)} required />
@@ -105,9 +75,7 @@ const Signup = () => {
                         <label htmlFor="password" className="form-label">Придумайте пароль*</label>
                         <input type="password" id="password" className="form-input" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
-
                     {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
-
                     <button type="submit" className="register-button" disabled={isRegistering}>
                         {isRegistering ? 'Регистрация...' : 'ЗАРЕГИСТРИРОВАТЬСЯ'}
                     </button>

@@ -1,12 +1,16 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import apiClient from '../api/apiClient';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+    const { login } = useAuth();
+    const from = location.state?.from?.pathname || "/dashboard";
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -21,13 +25,8 @@ const Login = () => {
             const { token } = response.data.data;
 
             if (token) {
-                // Сохраняем токен в localStorage.
-                // Перехватчик в apiClient автоматически подхватит его для будущих запросов.
-                localStorage.setItem('authToken', token);
-
-                // Перенаправляем пользователя на защищенную страницу, например, на его профиль
-                // Замените '/profile' на нужный вам маршрут после входа
-                navigate('/profile');
+                await login(token);
+                navigate(from, { replace: true });
             }
 
         } catch (err) {
