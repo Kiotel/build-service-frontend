@@ -5,7 +5,13 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(() => localStorage.getItem('authToken'));
+    const [token, setToken] = useState(() => {
+        try {
+            return localStorage.getItem('authToken');
+        } catch (_) {
+            return null; // localStorage может быть недоступен
+        }
+    });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,7 +26,7 @@ export const AuthProvider = ({ children }) => {
                     const userProfileResponse = await apiClient.get(`/api/users/${userId}`);
                     setUser(userProfileResponse.data.data);
                 } catch (error) {
-                    localStorage.removeItem('authToken');
+                    try { localStorage.removeItem('authToken'); } catch (_) {}
                     setToken(null);
                     setUser(null);
                 }
@@ -31,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     }, [token]);
 
     const login = async (newToken) => {
-        localStorage.setItem('authToken', newToken);
+        try { localStorage.setItem('authToken', newToken); } catch (_) {}
         setToken(newToken); // Setting the token triggers the useEffect above
 
         // --- KEY CHANGE ---
@@ -56,7 +62,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
-        localStorage.removeItem('authToken');
+        try { localStorage.removeItem('authToken'); } catch (_) {}
         setUser(null);
         setToken(null);
     };

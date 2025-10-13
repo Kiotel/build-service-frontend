@@ -1,13 +1,14 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../context/AuthContext';
+import useSafeNavigate from '../utils/useSafeNavigate';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+    const safeNavigate = useSafeNavigate();
     const location = useLocation();
     const { login } = useAuth();
     const from = location.state?.from?.pathname || "/dashboard";
@@ -26,7 +27,7 @@ const Login = () => {
 
             if (token) {
                 await login(token);
-                navigate(from, { replace: true });
+                try { safeNavigate(from, { replace: true }); } catch (_) {}
             }
 
         } catch (err) {

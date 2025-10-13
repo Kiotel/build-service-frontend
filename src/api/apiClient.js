@@ -22,8 +22,13 @@ const apiClient = axios.create({
 // Перехватчик для всех исходящих запросов
 apiClient.interceptors.request.use(
     (config) => {
-        // 1. Получаем токен из localStorage
-        const token = localStorage.getItem('authToken');
+        // 1. Получаем токен из localStorage (безопасно, с обработкой SecurityError)
+        let token = null;
+        try {
+            token = localStorage.getItem('authToken');
+        } catch (_) {
+            token = null; // локальное хранилище может быть недоступно (инкогнито/политики браузера)
+        }
 
         // 2. Если токен существует...
         if (token) {

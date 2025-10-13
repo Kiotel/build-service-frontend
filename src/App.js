@@ -28,6 +28,7 @@ import DashboardRedirect from './components/DashboardRedirect'; // <-- ДОБА�
 import PublicLayout from "./layouts/PublicLayout";
 import CustomerDashboard from "./components/dashboard/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import GanttPage from "./pages/GanttPage";
 
 // Макет вынесен в layouts/PublicLayout
 
@@ -56,6 +57,7 @@ function App() {
                             <Route path="/customer-dashboard" element={<CustomerDashboard />} />
                             <Route path="/brigade-dashboard" element={<BrigadeDashboard />} />
                             <Route path="/dashboard/projects/:contractId" element={<ContractDetailsPage />} />
+                            <Route path="/dashboard/projects/:contractId/gantt" element={<GanttPage />} />
                         </Route>
 
                         {/* --- ПУБЛИЧНЫЕ МАРШРУТЫ --- */}

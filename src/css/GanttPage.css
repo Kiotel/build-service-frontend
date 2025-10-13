@@ -1,0 +1,137 @@
+.gantt-page-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 150px); /* Высота минус хедеры */
+    background-color: #f8f9fa; /* Светло-серый фон как на скриншоте */
+    margin: -40px -60px;
+    padding: 0 30px; /* Добавляем боковые отступы */
+}
+
+.gantt-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0;
+    background-color: transparent; /* Убираем фон хедера */
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.gantt-page-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.unsaved-changes-indicator {
+    color: #ff8c00; /* Оранжевый цвет для предупреждения */
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.gantt-wrapper {
+    flex-grow: 1;
+    width: 100%;
+    background-color: #fff; /* Белый фон для самой диаграммы */
+    border: 1px solid #e0e0e0;
+    border-top: none; /* Убираем верхнюю границу, так как она есть у хедера */
+    position: relative; /* Необходимо для позиционирования сообщений */
+}
+
+.page-status {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+.page-status.empty-message {
+    top: 15px;
+}
+
+.page-status.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+/* Стили кнопок */
+.btn {
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn.btn-secondary {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    color: #495057;
+}
+
+.btn.btn-primary {
+    background-color: #6c757d; /* Серый цвет как на скриншоте */
+    border-color: #6c757d;
+    color: white;
+}
+
+.btn:disabled {
+    background-color: #ced4da;
+    border-color: #ced4da;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn {
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn.btn-secondary {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    color: #495057;
+}
+
+.btn.btn-primary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+/* --- ADD THIS STYLE FOR THE NEW BUTTON --- */
+.btn.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+/* --- END OF NEW STYLE --- */
+
+.btn:disabled {
+    background-color: #ced4da;
+    border-color: #ced4da;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
