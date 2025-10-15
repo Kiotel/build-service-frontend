@@ -6,28 +6,37 @@ const PublicOnlyRoute = ({children}) => {
     const {user, loading} = useAuth();
     const safeNavigate = useSafeNavigate();
 
-    // While we are checking the user's status, it's best to show a loading indicator
-    // to prevent the login/signup form from flashing on the screen for a logged-in user.
     useEffect(() => {
         if (!loading && user) {
             try {
-                safeNavigate('/dashboard', { replace: true });
-            } catch (_) {}
+                // Определяем правильный дашборд на основе роли пользователя
+                let targetDashboard = '/'; // Запасной вариант - главная страница
+                if (user.customer_id) {
+                    targetDashboard = '/customer-dashboard';
+                } else if (user.brigade_id || user.brigade) { // Проверяем оба возможных поля
+                    targetDashboard = '/brigade-dashboard';
+                }
+                
+                safeNavigate(targetDashboard, { replace: true });
+
+            } catch (_) {
+                // В случае ошибки навигации ничего не делаем, чтобы избежать сбоев
+            }
         }
     }, [loading, user, safeNavigate]);
 
+    // Пока идет проверка статуса аутентификации, показываем индикатор загрузки.
     if (loading) {
         return <div>Загрузка...</div>;
     }
 
+    // Если пользователь вошел в систему, он будет перенаправлен. Показываем заглушку.
     if (user) {
-        // Show minimal placeholder while redirecting imperatively
         return <div>Перенаправление...</div>;
     }
 
-    // If loading is finished and there is NO user, show the public page (Login, Signup).
+    // Если загрузка завершена и пользователя нет, показываем дочерний компонент (страницу входа или регистрации).
     return children;
 }
 
 export default PublicOnlyRoute;
-

@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../context/AuthContext';
@@ -7,27 +7,29 @@ import useSafeNavigate from '../utils/useSafeNavigate';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [role, setRole] = useState('customer'); // Добавлено состояние для роли
     const [error, setError] = useState('');
     const safeNavigate = useSafeNavigate();
-    const location = useLocation();
     const { login } = useAuth();
-    const from = location.state?.from?.pathname || "/dashboard";
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError('');
 
         try {
-            const response = await apiClient.post('/api/login', {
+            const loginResponse = await apiClient.post('/api/login', {
                 email: email,
                 password: password,
             });
 
-            const { token } = response.data.data;
+            const { token } = loginResponse.data.data;
 
             if (token) {
-                await login(token);
-                try { safeNavigate(from, { replace: true }); } catch (_) {}
+                await login(token); // Выполняем вход, чтобы сохранить токен и данные
+
+                // Перенаправляем на основе выбранной роли, а не данных пользователя
+                const targetDashboard = role === 'customer' ? '/customer-dashboard' : '/brigade-dashboard';
+                safeNavigate(targetDashboard, { replace: true });
             }
 
         } catch (err) {
@@ -41,8 +43,20 @@ const Login = () => {
             <div className="registration-container">
                 <div className="registration-title">ВХОД</div>
                 <div className="registration-subtitle">В BUILDSERVICE</div>
-
+                
+                {/* Добавлен переключатель ролей */}
                 <form onSubmit={handleLogin} autoComplete="off">
+                    <div className="role-selector" style={{marginBottom: '20px'}}>
+                        <div className="role-option">
+                            <input type="radio" id="customer" name="role" value="customer" checked={role === 'customer'} onChange={() => setRole('customer')} />
+                            <label htmlFor="customer">Я - Заказчик</label>
+                        </div>
+                        <div className="role-option">
+                            <input type="radio" id="builder" name="role" value="builder" checked={role === 'builder'} onChange={() => setRole('builder')} />
+                            <label htmlFor="builder">Я - Строитель</label>
+                        </div>
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">Электронная почта*</label>
                         <input type="email" id="email" name="email" className="form-input" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="off" />
@@ -61,7 +75,7 @@ const Login = () => {
 
                     <button type="submit" className="register-button">ВОЙТИ</button>
 
-                    <Link to="/" className="already-registered" style={{display: 'block', textAlign: 'center', marginTop: '15px'}}>
+                    <Link to="/signup" className="already-registered" style={{display: 'block', textAlign: 'center', marginTop: '15px'}}>
                         Еще не зарегистрированы?
                     </Link>
                 </form>

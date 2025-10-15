@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import '../../css/CustomerDashboard.css';
 import {useAuth} from "../../context/AuthContext";
 import apiClient from "../../api/apiClient";
 import Modal from "../modal/Modal";
+import {useNavigate} from "react-router-dom";
 
 const wavingHandImageUrl = 'https://em-content.zobj.net/source/apple/354/waving-hand_1f44b.png';
 
