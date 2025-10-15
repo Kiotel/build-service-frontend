@@ -56,7 +56,17 @@ const GanttPage = () => {
         const eventIds = [
             gantt.attachEvent('onAfterTaskAdd', markAsChanged),
             gantt.attachEvent('onAfterTaskUpdate', markAsChanged),
-            gantt.attachEvent('onAfterTaskDelete', markAsChanged),
+            gantt.attachEvent('onAfterTaskDelete', function(id) {
+                markAsChanged();
+                // Получаем актуальное состояние диаграммы
+                const currentGanttState = gantt.serialize();
+                // Проверяем, что задачи с id нет в массиве
+                if (!currentGanttState.data.find(task => String(task.id) === String(id))) {
+                    handleSave(); // Сохраняем только если задача реально удалена
+                } else {
+                    setError('Ошибка: задача не была удалена из локального состояния.');
+                }
+            }),
             gantt.attachEvent('onAfterLinkAdd', markAsChanged),
             gantt.attachEvent('onAfterLinkUpdate', markAsChanged),
             gantt.attachEvent('onAfterLinkDelete', markAsChanged),
@@ -117,7 +127,7 @@ const GanttPage = () => {
                 }
             } catch (e) {
                 console.error("Gantt: Failed to load data:", e);
-                if (!error) setError('Не удалось загрузить диаграмму Гантта.');
+                if (!error) setError('Не удалось загрузить диаграмму Ганта.');
             } finally {
                 setIsLoading(false);
             }
@@ -157,7 +167,7 @@ const GanttPage = () => {
     return (
         <div className="gantt-page-container">
             <div className="gantt-page-header">
-                <h1>Диаграмма Гантта</h1>
+                <h1>Диаграмма Ганта</h1>
                 <div className="header-actions">
                     {!isLoading && !error && (
                         <button onClick={handleAddTask} className="btn btn-success">
@@ -185,3 +195,4 @@ const GanttPage = () => {
 };
 
 export default GanttPage;
+

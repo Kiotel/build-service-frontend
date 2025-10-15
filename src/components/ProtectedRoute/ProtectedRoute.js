@@ -10,26 +10,26 @@ const ProtectedRoute = ({ children }) => {
     const redirectedRef = useRef(false);
 
     useEffect(() => {
+        // Перенаправляем, только если загрузка завершена, токена нет, и мы еще не перенаправляли
         if (!loading && !token && !redirectedRef.current) {
             redirectedRef.current = true;
             try {
                 safeNavigate('/login', { replace: true, state: { from: location } });
-            } catch (_) {}
+            } catch (_) {
+                // Обработка возможных ошибок навигации, если компонент размонтируется
+            }
         }
     }, [loading, token, location, safeNavigate]);
 
-    if (loading) {
+    // Пока идет загрузка или если токена еще нет, показываем индикатор загрузки.
+    // Это предотвращает рендеринг дочерних элементов или сообщения о перенаправлении
+    // до того, как контекст аутентификации полностью обновится.
+    if (loading || !token) {
         return <div>Загрузка сессии...</div>;
     }
 
-    if (!token) {
-        return <div>Перенаправление на страницу входа...</div>;
-    }
-
+    // Если токен есть и загрузка завершена, показываем дочерний компонент.
     return children;
 };
 
 export default ProtectedRoute;
-
-
-

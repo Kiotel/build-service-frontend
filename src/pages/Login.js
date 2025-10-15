@@ -42,15 +42,15 @@ const Login = () => {
                 <div className="registration-title">ВХОД</div>
                 <div className="registration-subtitle">В BUILDSERVICE</div>
 
-                <form onSubmit={handleLogin}>
+                <form onSubmit={handleLogin} autoComplete="off">
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">Электронная почта*</label>
-                        <input type="email" id="email" className="form-input" placeholder="Введите вашу почту" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <input type="email" id="email" name="email" className="form-input" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="off" />
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="password" className="form-label">Пароль*</label>
-                        <input type="password" id="password" className="form-input" placeholder="Введите пароль" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input type="password" id="password" name="password" className="form-input"     required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
                     </div>
 
                     {error && <p className="error-message" style={{color: 'red', textAlign: 'center'}}>{error}</p>}

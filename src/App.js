@@ -22,7 +22,6 @@ import BrigadeInvitationPage from './pages/BrigadeInvitationPage';
 
 // --- КОМПОНЕНТЫ МАРШРУТИЗАЦИИ ---
 import PublicOnlyRoute from "./components/PublicOnlyRoute"; // Предполагается, что путь теперь такой
-import DashboardRedirect from './components/DashboardRedirect'; // <-- ДОБАВЛЕН ИМПОРТ
 
 // --- КОМПОНЕНТЫ ИНТЕРФЕЙСА ---
 import PublicLayout from "./layouts/PublicLayout";
@@ -40,18 +39,7 @@ function App() {
                     <Routes>
                         {/* --- ЛОГИКА ДАШБОРДА (ПОЛНОСТЬЮ ПЕРЕРАБОТАНА) --- */}
 
-                        {/* 1. Маршрут-распределитель: /dashboard */}
-                        {/* При заходе сюда, компонент DashboardRedirect определит роль и перенаправит */}
-                        <Route
-                            path="/dashboard"
-                            element={
-                                <ProtectedRoute>
-                                    <DashboardRedirect />
-                                </ProtectedRoute>
-                            }
-                        />
-
-                        {/* 2. Группа маршрутов, использующих макет дашборда */}
+                        {/* Группа маршрутов, использующих макет дашборда */}
                         {/* Все, что находится внутри, будет защищено и иметь хедер дашборда */}
                         <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
                             <Route path="/customer-dashboard" element={<CustomerDashboard />} />
@@ -64,7 +52,6 @@ function App() {
                         <Route path="/" element={<PublicLayout />}>
                             <Route index element={<Home />} />
                             {/* Backward compatibility: handle both spellings */}
-                            <Route path="certificats" element={<Certificates />} />
                             <Route path="certificates" element={<Certificates />} />
                             <Route path="gallery" element={<Gallery />} />
                             <Route path="articles" element={<Articles />} />

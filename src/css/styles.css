@@ -309,7 +309,7 @@ nav ul li a:hover { color: var(--color-primary); }
     box-shadow: var(--shadow-sm);
 }
 
-.article-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+.article-card:hover { transform: none; box-shadow: var(--shadow-sm); }
 
 .article-image {
     height: 250px;
@@ -323,7 +323,7 @@ nav ul li a:hover { color: var(--color-primary); }
 }
 
 .article-card:hover .article-image img {
-    transform: scale(1.05);
+    transform: none;
 }
 
 .article-content {
@@ -380,13 +380,13 @@ nav ul li a:hover { color: var(--color-primary); }
     object-fit: contain;
 }
 
-/* Эффект при наведении на карточку */
+/* Эффект при наведении на карточку отключен */
 .article-card:hover .article-arrow {
-    transform: translateX(5px);
+    transform: none;
 }
 
 .article-content {
-    padding-bottom: 60px;
+    padding-bottom: 20px;
 }
 
 
@@ -1023,3 +1023,109 @@ nav ul li a:hover { color: var(--color-primary); }
 .callback-button:hover {
   background-color: #e5bc3a;
 }
+.call-page {
+    padding: 40px 20px;
+    min-height: calc(100vh - 90px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.call-card {
+    width: 100%;
+    max-width: 680px;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    padding: 36px;
+}
+
+.call-card.success {
+    text-align: center;
+}
+
+.call-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+}
+
+.call-subtitle {
+    font-size: 20px;
+    color: var(--color-muted);
+    margin-bottom: 24px;
+}
+
+.call-card .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.form-input.has-error { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,.08); }
+.field-error { color: #b91c1c; font-size: 14px; margin-top: 6px; }
+
+.form-group.checkbox { display: flex; align-items: flex-start; gap: 12px; }
+.form-group.checkbox input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; }
+.form-group.checkbox label { font-size: 16px; color: var(--color-text); }
+
+.actions { margin-top: 8px; }
+
+/* Button styling localized for call page */
+.call-card .btn.btn-primary {
+    width: 100%;
+    padding: 14px 18px;
+    background-color: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color .2s ease, transform .05s ease;
+}
+.call-card .btn.btn-primary:hover { background-color: var(--color-primary-600); }
+.call-card .btn.btn-primary:active { transform: translateY(1px); }
+
+@media (max-width: 640px) {
+    .call-card { padding: 24px; }
+    .call-title { font-size: 28px; }
+}
+
+/* Toast notification */
+.toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    background: #111827;
+    color: #fff;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: toast-in 200ms ease-out;
+}
+.toast-success {
+    background: #065f46; /* emerald-800 */
+}
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Minimal spinner */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    animation: spin .8s linear infinite;
+    vertical-align: -2px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import apiClient from '../api/apiClient'; // Импортируем наш настроенный клиент
 import { useAuth } from '../context/AuthContext';
@@ -10,9 +10,7 @@ const Signcon = () => {
     const [role, setRole] = useState('customer');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const location = useLocation();
     const { login } = useAuth();
-    const from = location.state?.from?.pathname || '/dashboard';
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -68,9 +66,10 @@ const Signcon = () => {
             }
 
             // =================================================================
-            // ШАГ 4: Перенаправление на защищенную страницу, так как пользователь уже вошел в систему
+            // ШАГ 4: Перенаправление на соответствующий дашборд
             // =================================================================
-            navigate(from, { replace: true });
+            const targetDashboard = role === 'customer' ? '/customer-dashboard' : '/brigade-dashboard';
+            navigate(targetDashboard, { replace: true });
 
         } catch (err) {
             console.error('Ошибка регистрации:', err);
@@ -91,7 +90,7 @@ const Signcon = () => {
                 <div className="registration-subtitle">В BUILDSERVICE</div>
                 <div className="registration-subtitle">ВЫБЕРИТЕ ВАШУ РОЛЬ:</div>
 
-                <form onSubmit={handleRegister}>
+                <form onSubmit={handleRegister} autoComplete="off">
                     <div className="role-selector">
                         <div className="role-option">
                             <input type="radio" id="customer" name="role" value="customer" checked={role === 'customer'} onChange={() => setRole('customer')} />
@@ -105,17 +104,17 @@ const Signcon = () => {
 
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">Ваше имя или название организации*</label>
-                        <input type="text" id="name" className="form-input" placeholder="Введите ваше имя" required value={name} onChange={(e) => setName(e.target.value)} />
+                        <input type="text" id="name" name="name" className="form-input" placeholder="Введите ваше имя" required value={name} onChange={(e) => setName(e.target.value)} autoComplete="off" />
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">Электронная почта*</label>
-                        <input type="email" id="email" className="form-input" placeholder="Введите вашу почту" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <input type="email" id="email" name="email" className="form-input" placeholder="Введите вашу почту" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="off" />
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="password" className="form-label">Придумайте пароль*</label>
-                        <input type="password" id="password" className="form-input" placeholder="Введите пароль" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input type="password" id="password" name="password" className="form-input" placeholder="Введите пароль" required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
                     </div>
 
                     {error && <p className="error-message" style={{color: 'red', textAlign: 'center'}}>{error}</p>}

@@ -4,7 +4,6 @@ import apiClient from '../api/apiClient'; // Убедитесь, что путь
 import { useAuth } from '../context/AuthContext'; // Убедитесь, что путь верный
 import '../css/ContractDetailsPage.css'; // Убедитесь, что путь верный
 import Modal from '../components/modal/Modal'; // Убедитесь, что путь верный
-import GanttChart from '../components/gantt/GanttChart';
 
 const ContractDetailsPage = () => {
     const { contractId } = useParams();
@@ -148,7 +147,7 @@ const ContractDetailsPage = () => {
                     )}
                     <div className="header-actions">
                         <Link to={`/dashboard/projects/${contractId}/gantt`} className="btn btn-info">
-                            Диаграмма Гантта
+                            Диаграмма Ганта
                         </Link>
                         {!isEditing && (
                             <button
@@ -177,10 +176,6 @@ const ContractDetailsPage = () => {
                         {isEditing ? <input type="date" name="start_date" value={formatDateForInput(formData.start_date)} onChange={handleInputChange} className="form-input" /> : <span>{formatDateForDisplay(contract.start_date)}</span>}
                     </div>
 
-				<div style={{ marginTop: '24px' }}>
-					<h2 style={{ marginBottom: '12px' }}>Диаграмма Гантта</h2>
-					<GanttChart contractId={contract.id} height={500} />
-				</div>
                     <div className="detail-item">
                         <strong>Дата окончания:</strong>
                         {isEditing ? <input type="date" name="end_date" value={formatDateForInput(formData.end_date)} onChange={handleInputChange} className="form-input" /> : <span>{formatDateForDisplay(contract.end_date)}</span>}

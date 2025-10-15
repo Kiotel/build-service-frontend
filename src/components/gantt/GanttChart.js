@@ -87,7 +87,7 @@ const GanttChart = ({ contractId, height = 500 }) => {
 
             } catch (e) {
                 console.error("Failed to load Gantt chart:", e);
-                setError('Не удалось загрузить диаграмму Гантта.');
+                setError('Не удалось загрузить диаграмму Ганта.');
             } finally {
                 setIsLoading(false);
             }
@@ -108,10 +108,6 @@ const GanttChart = ({ contractId, height = 500 }) => {
         return <div className="page-status error">{error}</div>;
     }
 
-    // If the chart is empty, show a message instead of the chart container
-    if (isEmpty) {
-        return <div className="page-status">Для этого проекта еще не созданы задачи. Диаграмма Гантта пуста.</div>;
-    }
 
     // If data exists, show the Gantt chart
     return (

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom'; // Импортируем useNavigate
-import { FaHeart } from 'react-icons/fa';
-import '../css/DashboardLayout.css'; // Убедитесь, что путь верный
+    import '../css/DashboardLayout.css'; // Убедитесь, что путь верный
 import { useAuth } from '../context/AuthContext'; // Убедитесь, что путь верный
 
 const DashboardLayout = () => {
@@ -36,15 +35,10 @@ const DashboardLayout = () => {
                         <Link to="/dashboard">BuildService</Link>
                     </div>
                     <nav className="header-nav">
-                        <Link to="/dashboard">ГЛАВНАЯ</Link>
-                        <Link to="/dashboard/my-projects" className="active">МОИ ПРОЕКТЫ</Link>
-                        <Link to="/dashboard/messages">СООБЩЕНИЯ</Link>
-                        <Link to="/dashboard/about">О НАС</Link>
+                        {/* Оставляем только рабочие ссылки */}
+                        <Link to="/dashboard" className="active">ГЛАВНАЯ</Link>
+                        {/* <Link to="/dashboard/my-projects" className="active">МОИ ПРОЕКТЫ</Link> */}
                     </nav>
-                </div>
-                <div className="header-right">
-                    <button className="wishlist-button"><FaHeart /></button>
-                    <button className="btn btn-primary">Разместить объявление</button>
                 </div>
             </header>
 

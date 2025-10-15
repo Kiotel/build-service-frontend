@@ -27,7 +27,7 @@ const Navbar = () => {
             </div>
 
             <div className={`navbar-links ${menuOpen ? "active" : ""}`}>
-                <Link to="/certificats" onClick={closeMenu}>СЕРТИФИКАТЫ</Link>
+                <Link to="/certificates" onClick={closeMenu}>СЕРТИФИКАТЫ</Link>
                 <Link to="/gallery" onClick={closeMenu}>ГАЛЕРЕЯ</Link>
                 <Link to="/articles" onClick={closeMenu}>СТАТЬИ</Link>
                 <Link to="/reviews" onClick={closeMenu}>ОТЗЫВЫ</Link>

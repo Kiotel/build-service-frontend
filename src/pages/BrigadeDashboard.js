@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../context/AuthContext';
 import '../css/CustomerDashboard.css'; // Мы можем переиспользовать стили для единообразия
 
 const BrigadeDashboard = () => {
-    const { user } = useAuth(); // Получаем залогиненного пользователя (бригаду)
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
     const [projects, setProjects] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,39 +38,39 @@ const BrigadeDashboard = () => {
     }, [user, fetchBrigadeProjects]);
 
     return (
-        <div className="dashboard-content">
-            {/* Левая панель с проектами */}
-            <aside className="projects-sidebar" style={{ flex: '0 0 400px' }}>
-                <div className="projects-list-container">
-                    <h2>НАЗНАЧЕННЫЕ ПРОЕКТЫ:</h2>
-                    {isLoading && <p>Загрузка проектов...</p>}
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                    {!isLoading && !error && (
-                        <ul className="projects-list">
-                            {projects.length > 0 ? (
-                                projects.map((project) => (
-                                    <li key={project.id}>
-                                        <Link
-                                            to={`/dashboard/projects/${project.id}`}
-                                            className="project-item"
-                                        >
-                                            {project.name}
-                                        </Link>
-                                    </li>
-                                ))
-                            ) : (
-                                <p>На вас еще не назначено ни одного проекта.</p>
-                            )}
-                        </ul>
-                    )}
-                </div>
-            </aside>
-
-            {/* Правая панель с информацией */}
+        <div className="dashboard-content redesigned">
+            <div className="projects-list-container">
+                <h2 className="projects-title">НАЗНАЧЕННЫЕ ПРОЕКТЫ</h2>
+                {isLoading && <p>Загрузка проектов...</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {!isLoading && !error && (
+                    <div className="projects-grid">
+                        {projects.length > 0 ? (
+                            projects.map((project) => (
+                                <div
+                                    key={project.id}
+                                    className="project-card"
+                                    onClick={() => navigate(`/dashboard/projects/${project.id}`)}
+                                    tabIndex={0}
+                                    role="button"
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            navigate(`/dashboard/projects/${project.id}`);
+                                        }
+                                    }}
+                                >
+                                    <span className="project-card-title">{project.name}</span>
+                                </div>
+                            ))
+                        ) : (
+                            <p>На вас еще не назначено ни одного проекта.</p>
+                        )}
+                    </div>
+                )}
+            </div>
             <section className="actions-panel">
-                <h1>Панель управления Бригады</h1>
-                <p>Здесь вы можете видеть все проекты, в которых вы участвуете. Нажмите на проект слева, чтобы просмотреть его детали.</p>
-                {/* Здесь можно добавить другую релевантную для бригады информацию */}
+                <h1 className="brigade-panel-title">Панель управления Бригады</h1>
+                <p className="brigade-panel-desc">Здесь вы можете видеть все проекты, в которых вы участвуете. Нажмите на проект слева, чтобы просмотреть его детали.</p>
             </section>
         </div>
     );
