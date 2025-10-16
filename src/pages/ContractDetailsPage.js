@@ -1,33 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import apiClient from '../api/apiClient'; // Убедитесь, что путь верный
-import { useAuth } from '../context/AuthContext'; // Убедитесь, что путь верный
-import '../css/ContractDetailsPage.css'; // Убедитесь, что путь верный
-import Modal from '../components/modal/Modal'; // Убедитесь, что путь верный
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import apiClient from '../api/apiClient';
+import { useAuth } from '../context/AuthContext';
+import '../css/ContractDetailsPage.css';
+import Modal from '../components/modal/Modal';
 
 const ContractDetailsPage = () => {
     const { contractId } = useParams();
     const { user } = useAuth();
+    const navigate = useNavigate();
 
-    // Состояния для данных и загрузки
+    // Состояния
     const [contract, setContract] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // Состояния для режима редактирования
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({});
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState(null);
-
-    // Состояния для модального окна приглашения
     const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
     const [invitationUrl, setInvitationUrl] = useState('');
     const [isCopied, setIsCopied] = useState(false);
-
-    // Состояния для смены статуса
     const [isTogglingStatus, setIsTogglingStatus] = useState(false);
     const [toggleStatusError, setToggleStatusError] = useState(null);
+    const [isLeaving, setIsLeaving] = useState(false);
+    const [leaveError, setLeaveError] = useState(null);
 
     useEffect(() => {
         const fetchContractDetails = async () => {
@@ -47,7 +44,7 @@ const ContractDetailsPage = () => {
         fetchContractDetails();
     }, [contractId, user]);
 
-    // --- ОБРАБОТЧИКИ ДЛЯ РЕДАКТИРОВАНИЯ ---
+    // --- ОБРАБОТЧИКИ РЕДАКТИРОВАНИЯ ---
     const handleEdit = () => {
         setFormData(contract);
         setIsEditing(true);
@@ -69,8 +66,8 @@ const ContractDetailsPage = () => {
         try {
             const payload = {
                 name: formData.name,
-                customer_id: contract.customer_id, // customer_id не меняется
-                brigade_id: contract.brigade_id, // brigade_id не меняется
+                customer_id: contract.customer_id,
+                brigade_id: contract.brigade_id,
                 startDate: new Date(formData.start_date).toISOString(),
                 endDate: formData.end_date ? new Date(formData.end_date).toISOString() : null,
             };
@@ -84,7 +81,7 @@ const ContractDetailsPage = () => {
         }
     };
 
-    // --- ОБРАБОТЧИКИ ДЛЯ ПРИГЛАШЕНИЯ ---
+    // --- ОБРАБОТЧИКИ ПРИГЛАШЕНИЯ ---
     const handleCreateInvitation = () => {
         const url = `${window.location.origin}/join-project/${contract.id}`;
         setInvitationUrl(url);
@@ -97,7 +94,7 @@ const ContractDetailsPage = () => {
         setIsCopied(true);
     };
 
-    // --- ОБРАБОТЧИК ДЛЯ СМЕНЫ СТАТУСА ---
+    // --- ОБРАБОТЧИК СМЕНЫ СТАТУСА ---
     const handleToggleStatus = async () => {
         setIsTogglingStatus(true);
         setToggleStatusError(null);
@@ -107,7 +104,7 @@ const ContractDetailsPage = () => {
                 name: contract.name,
                 customer_id: contract.customer_id,
                 brigade_id: contract.brigade_id,
-                startDate: contract.start_date,
+                startDate: new Date(contract.start_date).toISOString(),
                 endDate: newEndDate,
             };
             const response = await apiClient.put(`/api/contracts/${contractId}`, payload);
@@ -117,6 +114,33 @@ const ContractDetailsPage = () => {
             setToggleStatusError("Не удалось изменить статус проекта.");
         } finally {
             setIsTogglingStatus(false);
+        }
+    };
+
+    // --- ИСПРАВЛЕННЫЙ ОБРАБОТЧИК ВЫХОДА ИЗ ПРОЕКТА ---
+    const handleLeaveProject = async () => {
+        if (!window.confirm('Вы уверены, что хотите покинуть этот проект? Это действие нельзя будет отменить.')) {
+            return;
+        }
+        setIsLeaving(true);
+        setLeaveError(null);
+        try {
+            // Создаем payload в том же формате, что и другие PUT-запросы
+            const payload = {
+                name: contract.name,
+                customer_id: contract.customer_id,
+                brigade_id: null, // Основное действие - обнуляем ID бригады
+                startDate: new Date(contract.start_date).toISOString(),
+                endDate: contract.end_date ? new Date(contract.end_date).toISOString() : null,
+            };
+            await apiClient.put(`/api/contracts/${contractId}`, payload);
+            alert('Вы успешно покинули проект.');
+            navigate('/brigade-dashboard');
+        } catch (err) {
+            console.error("Failed to leave project:", err);
+            setLeaveError('Не удалось покинуть проект. Пожалуйста, попробуйте снова.');
+        } finally {
+            setIsLeaving(false);
         }
     };
 
@@ -136,6 +160,8 @@ const ContractDetailsPage = () => {
     if (error) return <div className="page-status error">{error}</div>;
     if (!contract) return <div className="page-status">Проект не найден.</div>;
 
+    const isBrigadeOnProject = user && (user.brigade_id || user.brigade) && (user.brigade_id === contract.brigade_id || user.brigade?.id === contract.brigade_id);
+
     return (
         <>
             <div className="contract-details-container">
@@ -150,22 +176,24 @@ const ContractDetailsPage = () => {
                             Диаграмма Ганта
                         </Link>
                         {!isEditing && (
-                            <button
-                                onClick={handleToggleStatus}
-                                className={`btn ${contract.end_date ? 'btn-warning' : 'btn-success'}`}
-                                disabled={isTogglingStatus}
-                            >
+                           <button onClick={handleToggleStatus} className={`btn ${contract.end_date ? 'btn-warning' : 'btn-success'}`} disabled={isTogglingStatus}>
                                 {isTogglingStatus ? 'Обновление...' : (contract.end_date ? 'Возобновить проект' : 'Завершить проект')}
                             </button>
                         )}
                         {!isEditing && (
                             <button onClick={handleEdit} className="btn btn-primary">Изменить</button>
                         )}
-                        <Link to="/dashboard" className="btn btn-secondary">← Назад</Link>
+                        {isBrigadeOnProject && !isEditing && (
+                            <button onClick={handleLeaveProject} className="btn btn-danger" disabled={isLeaving}>
+                                {isLeaving ? 'Выходим...' : 'Выйти из проекта'}
+                            </button>
+                        )}
+                        <Link to={user.customer_id ? '/customer-dashboard' : '/brigade-dashboard'} className="btn btn-secondary">← Назад</Link>
                     </div>
                 </div>
 
                 {toggleStatusError && <div className="page-status error" style={{padding: '15px 0'}}>{toggleStatusError}</div>}
+                {leaveError && <div className="page-status error" style={{padding: '15px 0'}}>{leaveError}</div>}
 
                 <div className="details-grid">
                     <div className="detail-item"><strong>ID Проекта:</strong> <span>{contract.id}</span></div>

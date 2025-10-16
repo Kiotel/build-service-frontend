@@ -10,7 +10,7 @@ const Signcon = () => {
     const [role, setRole] = useState('customer');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { setAuthToken } = useAuth(); // Используем новую, безопасную функцию
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -22,59 +22,45 @@ const Signcon = () => {
         }
 
         try {
-            // =================================================================
-            // ШАГ 1: Регистрация пользователя (не требует токена)
-            // =================================================================
+            // Шаг 1: Регистрация пользователя
             const userResponse = await apiClient.post('/api/users', {
                 email: email,
                 name: name,
                 password: password,
             });
-
             const userId = userResponse.data.data.id;
 
-            // =================================================================
-            // НОВЫЙ ШАГ 2: Вход в систему для получения токена
-            // =================================================================
+            // Шаг 2: Вход в систему для получения токена
             const loginResponse = await apiClient.post('/api/login', {
                 email: email,
                 password: password,
             });
-
             const { token } = loginResponse.data.data;
-
             if (!token) {
-                // Эта ситуация не должна произойти при успешной регистрации, но это хорошая проверка
                 throw new Error('Токен не был получен после входа.');
             }
 
-            // Авторизуем пользователя в контексте (сохранит токен и подгрузит профиль)
-            await login(token);
+            // Шаг 3: Устанавливаем токен в apiClient для следующего запроса
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-            // =================================================================
-            // ШАГ 3: Создание профиля в зависимости от роли (теперь этот запрос будет с токеном)
-            // =================================================================
+            // Шаг 4: Создание профиля (Заказчика или Строителя)
             if (role === 'customer') {
-                await apiClient.post(`/api/customer/${userId}`, {
-                    name: name
-                });
+                await apiClient.post(`/api/customer/${userId}`, { name: name });
             } else if (role === 'builder') {
-                await apiClient.post(`/api/brigades/${userId}`, {
-                    name: name,
-                    workersAmount: 1, // Пример значения
-                });
+                await apiClient.post(`/api/brigades/${userId}`, { name: name, workersAmount: 1 });
             }
 
-            // =================================================================
-            // ШАГ 4: Перенаправление на соответствующий дашборд
-            // =================================================================
+            // Шаг 5: Просто сохраняем токен, не загружая профиль. Это предотвращает гонку.
+            setAuthToken(token);
+
+            // Шаг 6: Перенаправление на соответствующий дашборд
             const targetDashboard = role === 'customer' ? '/customer-dashboard' : '/brigade-dashboard';
             navigate(targetDashboard, { replace: true });
 
         } catch (err) {
             console.error('Ошибка регистрации:', err);
-            // Очищаем токен на случай, если что-то пошло не так на полпути
             localStorage.removeItem('authToken');
+            delete apiClient.defaults.headers.common['Authorization'];
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);
             } else {

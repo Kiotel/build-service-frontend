@@ -36,7 +36,7 @@ const BrigadeInvitationPage = () => {
             navigate('/login');
             return;
         }
-        if (!user.brigade_id) {
+        if (!user.brigade_id && !user.brigade) { // Улучшенная проверка
             setError("Принять приглашение может только пользователь с профилем бригады.");
             return;
         }
@@ -47,11 +47,12 @@ const BrigadeInvitationPage = () => {
 
         setIsAccepting(true);
         try {
-            // В этом вызове токен добавляется автоматически перехватчиком из apiClient.js
+            // Вызов API для принятия приглашения
             await apiClient.get(`/api/contracts/invitation/${contractId}`);
 
             alert("Вы успешно присоединились к проекту!");
-            navigate('/dashboard');
+            // Перенаправляем на страницу только что принятого проекта
+            navigate(`/dashboard/projects/${contractId}`);
         } catch (err) {
             console.error("Failed to accept invitation:", err);
             setError("Не удалось принять приглашение. Возможно, оно уже было принято или срок его действия истек.");
@@ -72,7 +73,7 @@ const BrigadeInvitationPage = () => {
             );
         }
 
-        const isNotBrigade = !user.brigade_id;
+        const isNotBrigade = !user.brigade_id && !user.brigade;
         const isOwnProject = contract && user.customer_id === contract.customer_id;
 
         return (

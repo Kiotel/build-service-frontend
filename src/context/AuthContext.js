@@ -36,29 +36,32 @@ export const AuthProvider = ({ children }) => {
         verifyAndFetchUser();
     }, [token]);
 
+    // Для страницы входа: немедленно загружает профиль
     const login = async (newToken) => {
-        try { localStorage.setItem('authToken', newToken); } catch (_) {}
-        setToken(newToken); // Setting the token triggers the useEffect above
-
-        // --- KEY CHANGE ---
-        // We will now manually fetch the user right here and return it.
-        // This makes the user data available immediately after login.
         try {
-            const protectedResponse = await apiClient.get('/api/protected');
+            const protectedResponse = await apiClient.get('/api/protected', { headers: { 'Authorization': `Bearer ${newToken}` } });
             const principalString = protectedResponse.data;
             const match = principalString.match(/id=(\d+)/);
             if (!match || !match[1]) throw new Error("Could not parse user ID on login.");
             const userId = match[1];
-            const userProfileResponse = await apiClient.get(`/api/users/${userId}`);
+            const userProfileResponse = await apiClient.get(`/api/users/${userId}`, { headers: { 'Authorization': `Bearer ${newToken}` } });
             const fetchedUser = userProfileResponse.data.data;
-            setUser(fetchedUser); // Also set the user in the context state
-            return fetchedUser; // Return the user object
+            
+            localStorage.setItem('authToken', newToken);
+            setUser(fetchedUser);
+            setToken(newToken);
+            return fetchedUser;
         } catch (error) {
             console.error("Failed to fetch user immediately after login:", error);
-            // If it fails, log out to be safe
-            logout();
-            return null;
+            logout(); // В случае ошибки выходим из системы
+            throw error; // Передаем ошибку дальше, чтобы форма входа могла ее обработать
         }
+    };
+
+    // Только для регистрации: просто устанавливает токен, не загружая профиль
+    const setAuthToken = (newToken) => {
+        try { localStorage.setItem('authToken', newToken); } catch (_) {}
+        setToken(newToken);
     };
 
     const logout = () => {
@@ -67,12 +70,13 @@ export const AuthProvider = ({ children }) => {
         setToken(null);
     };
 
+    // Не показываем приложение, пока не будет определен статус пользователя
     if (loading) {
         return <div>Loading Application...</div>;
     }
 
     return (
-        <AuthContext.Provider value={{ user, token, loading, login, logout }}>
+        <AuthContext.Provider value={{ user, token, loading, login, setAuthToken, logout }}>
             {children}
         </AuthContext.Provider>
     );

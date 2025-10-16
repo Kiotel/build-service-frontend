@@ -187,7 +187,6 @@ const GanttPage = () => {
             <div className="gantt-wrapper">
                 {isLoading && <div className="page-status">Загрузка диаграммы...</div>}
                 {error && <div className="page-status error">{error}</div>}
-                {isEmpty && <div className="page-status empty-message">Диаграмма пока пуста. <strong>Нажмите "+ Добавить задачу"</strong>, чтобы начать.</div>}
                 <div ref={ganttContainerRef} style={{ width: '100%', height: '100%', display: isLoading || error ? 'none' : 'block' }} />
             </div>
         </div>
@@ -195,4 +194,3 @@ const GanttPage = () => {
 };
 
 export default GanttPage;
-
