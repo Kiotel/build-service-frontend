@@ -15,7 +15,7 @@ const BrigadeDashboard = () => {
     const fetchBrigadeProjects = useCallback(async () => {
         // Убеждаемся, что у пользователя есть ID бригады
         if (!user || !user.brigade_id) {
-            if (user) setError("Ваш профиль не является профилем бригады.");
+            if (user) setError("Ваш профиль не является профилем подрядчика.");
             setIsLoading(false);
             return;
         }
@@ -69,7 +69,7 @@ const BrigadeDashboard = () => {
                 )}
             </div>
             <section className="actions-panel">
-                <h1 className="brigade-panel-title">Панель управления Бригады</h1>
+                <h1 className="brigade-panel-title">Панель управления подрядчика</h1>
                 <p className="brigade-panel-desc">Здесь вы можете видеть все проекты, в которых вы участвуете. Нажмите на проект слева, чтобы просмотреть его детали.</p>
             </section>
         </div>

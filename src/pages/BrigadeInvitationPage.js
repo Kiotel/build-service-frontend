@@ -32,12 +32,12 @@ const BrigadeInvitationPage = () => {
         setError(null);
 
         if (!user) {
-            alert("Пожалуйста, войдите в систему как бригада, чтобы принять приглашение.");
+            alert("Пожалуйста, войдите в систему как подрядчик, чтобы принять приглашение.");
             navigate('/login');
             return;
         }
         if (!user.brigade_id && !user.brigade) { // Улучшенная проверка
-            setError("Принять приглашение может только пользователь с профилем бригады.");
+            setError("Принять приглашение может только пользователь с профилем подрядчика.");
             return;
         }
         if (contract && user.customer_id === contract.customer_id) {
@@ -86,7 +86,7 @@ const BrigadeInvitationPage = () => {
                 >
                     {isAccepting ? 'Принимаем...' : 'Принять приглашение'}
                 </button>
-                {isNotBrigade && <p className="validation-error">Ваш профиль не является профилем бригады.</p>}
+                {isNotBrigade && <p className="validation-error">Ваш профиль не является профилем подрядчика.</p>}
                 {isOwnProject && <p className="validation-error">Нельзя принять приглашение в собственный проект.</p>}
             </>
         );

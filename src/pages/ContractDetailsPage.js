@@ -198,7 +198,7 @@ const ContractDetailsPage = () => {
                 <div className="details-grid">
                     <div className="detail-item"><strong>ID Проекта:</strong> <span>{contract.id}</span></div>
                     <div className="detail-item"><strong>ID Заказчика:</strong> <span>{contract.customer_id}</span></div>
-                    <div className="detail-item"><strong>ID Бригады:</strong> <span>{contract.brigade_id || 'Не назначена'}</span></div>
+                    <div className="detail-item"><strong>ID подрядчика:</strong> <span>{contract.brigade_id || 'Не назначена'}</span></div>
                     <div className="detail-item">
                         <strong>Дата начала:</strong>
                         {isEditing ? <input type="date" name="start_date" value={formatDateForInput(formData.start_date)} onChange={handleInputChange} className="form-input" /> : <span>{formatDateForDisplay(contract.start_date)}</span>}
@@ -213,7 +213,7 @@ const ContractDetailsPage = () => {
 
                 {!isEditing && contract.brigade_id === null && (
                     <div className="invitation-action">
-                        <p>Для этого проекта еще не назначена бригада.</p>
+                        <p>Для этого проекта еще не назначен подрядчик.</p>
                         <button onClick={handleCreateInvitation} className="btn btn-success">Создать приглашение</button>
                     </div>
                 )}
@@ -230,8 +230,8 @@ const ContractDetailsPage = () => {
             </div>
 
             <Modal isOpen={isInviteModalOpen} onClose={() => setIsInviteModalOpen(false)}>
-                <h2>Приглашение для бригады</h2>
-                <p>Отправьте эту ссылку руководителю бригады. Перейдя по ней, он сможет принять приглашение и присоединиться к вашему проекту.</p>
+                <h2>Приглашение для подрядчика</h2>
+                <p>Отправьте эту ссылку подрядчику. Перейдя по ней, он сможет принять приглашение и присоединиться к вашему проекту.</p>
                 <div className="invitation-url-box">
                     <input type="text" value={invitationUrl} readOnly />
                     <button onClick={copyToClipboard} className="btn btn-primary">{isCopied ? 'Скопировано!' : 'Копировать'}</button>
