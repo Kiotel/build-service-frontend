@@ -28,18 +28,44 @@ const CustomerDashboard = () => {
             setIsLoading(false);
             return;
         }
+        
+        setIsLoading(true);
+        setError(null);
+        
         try {
-            setIsLoading(true);
-            const response = await apiClient.get(`/api/contracts/byCustomerId/${user.customer_id}`);
-            const allProjects = response.data.data.contracts || [];
+            let allProjects = [];
+            let currentPage = 1;
+            let hasMore = true;
+
+            // Loop through pages to fetch all projects, accounting for pagination.
+            while (hasMore) {
+                const response = await apiClient.get(
+                    `/api/contracts/byCustomerId/${user.customer_id}?page=${currentPage}`
+                );
+
+                const responseData = response.data.data;
+                const projectsOnPage = responseData.contracts || [];
+                
+                if (projectsOnPage.length > 0) {
+                    allProjects = allProjects.concat(projectsOnPage);
+                    currentPage++;
+                } else {
+                    // Stop when an empty page is returned, indicating no more projects.
+                    hasMore = false;
+                }
+            }
+
             setActiveProjects(allProjects.filter(p => !p.end_date));
             setCompletedProjects(allProjects.filter(p => p.end_date));
+
         } catch (err) {
+            console.error("Failed to fetch projects:", err);
             setError("Не удалось загрузить проекты.");
         } finally {
             setIsLoading(false);
         }
     }, [user]);
+
 
     useEffect(() => {
         if (user) {
@@ -59,14 +85,19 @@ const CustomerDashboard = () => {
         try {
             const projectPayload = {
                 name: newProjectName,
+                customer_id: user.customer_id,
                 start_date: new Date().toISOString(),
                 end_date: null,
                 brigade_id: null
             };
             await apiClient.post('/api/contracts', projectPayload);
+            
             setNewProjectName('');
             setIsModalOpen(false);
+
+            // Directly refetch all projects to ensure the new one is included.
             await fetchCustomerProjects();
+
         } catch (err) {
             setCreateError("Не удалось создать проект. Попробуйте снова.");
         } finally {

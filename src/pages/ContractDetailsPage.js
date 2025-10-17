@@ -160,13 +160,14 @@ const ContractDetailsPage = () => {
     if (error) return <div className="page-status error">{error}</div>;
     if (!contract) return <div className="page-status">Проект не найден.</div>;
 
+    const isCustomer = user && !!user.customer_id;
     const isBrigadeOnProject = user && (user.brigade_id || user.brigade) && (user.brigade_id === contract.brigade_id || user.brigade?.id === contract.brigade_id);
 
     return (
         <>
             <div className="contract-details-container">
                 <div className="contract-header">
-                    {isEditing ? (
+                    {isEditing && isCustomer ? (
                         <input type="text" name="name" value={formData.name || ''} onChange={handleInputChange} className="header-input" />
                     ) : (
                         <h1>{contract.name}</h1>
@@ -175,13 +176,13 @@ const ContractDetailsPage = () => {
                         <Link to={`/dashboard/projects/${contractId}/gantt`} className="btn btn-info">
                             Диаграмма Ганта
                         </Link>
-                        {!isEditing && (
-                           <button onClick={handleToggleStatus} className={`btn ${contract.end_date ? 'btn-warning' : 'btn-success'}`} disabled={isTogglingStatus}>
-                                {isTogglingStatus ? 'Обновление...' : (contract.end_date ? 'Возобновить проект' : 'Завершить проект')}
-                            </button>
-                        )}
-                        {!isEditing && (
-                            <button onClick={handleEdit} className="btn btn-primary">Изменить</button>
+                        {isCustomer && !isEditing && (
+                            <>
+                                <button onClick={handleToggleStatus} className={`btn ${contract.end_date ? 'btn-warning' : 'btn-success'}`} disabled={isTogglingStatus}>
+                                    {isTogglingStatus ? 'Обновление...' : (contract.end_date ? 'Возобновить проект' : 'Завершить проект')}
+                                </button>
+                                <button onClick={handleEdit} className="btn btn-primary">Изменить</button>
+                            </>
                         )}
                         {isBrigadeOnProject && !isEditing && (
                             <button onClick={handleLeaveProject} className="btn btn-danger" disabled={isLeaving}>
@@ -201,24 +202,24 @@ const ContractDetailsPage = () => {
                     <div className="detail-item"><strong>ID подрядчика:</strong> <span>{contract.brigade_id || 'Не назначена'}</span></div>
                     <div className="detail-item">
                         <strong>Дата начала:</strong>
-                        {isEditing ? <input type="date" name="start_date" value={formatDateForInput(formData.start_date)} onChange={handleInputChange} className="form-input" /> : <span>{formatDateForDisplay(contract.start_date)}</span>}
+                        {isEditing && isCustomer ? <input type="date" name="start_date" value={formatDateForInput(formData.start_date)} onChange={handleInputChange} className="form-input" /> : <span>{formatDateForDisplay(contract.start_date)}</span>}
                     </div>
 
                     <div className="detail-item">
                         <strong>Дата окончания:</strong>
-                        {isEditing ? <input type="date" name="end_date" value={formatDateForInput(formData.end_date)} onChange={handleInputChange} className="form-input" /> : <span>{formatDateForDisplay(contract.end_date)}</span>}
+                        {isEditing && isCustomer ? <input type="date" name="end_date" value={formatDateForInput(formData.end_date)} onChange={handleInputChange} className="form-input" /> : <span>{formatDateForDisplay(contract.end_date)}</span>}
                     </div>
                     <div className="detail-item"><strong>Статус:</strong> <span className={`status ${contract.end_date ? 'completed' : 'active'}`}>{contract.end_date ? 'Завершен' : 'В работе'}</span></div>
                 </div>
 
-                {!isEditing && contract.brigade_id === null && (
+                {isCustomer && !isEditing && contract.brigade_id === null && (
                     <div className="invitation-action">
                         <p>Для этого проекта еще не назначен подрядчик.</p>
                         <button onClick={handleCreateInvitation} className="btn btn-success">Создать приглашение</button>
                     </div>
                 )}
 
-                {isEditing && (
+                {isEditing && isCustomer && (
                     <div className="edit-actions">
                         {saveError && <div className="save-error">{saveError}</div>}
                         <button onClick={handleCancel} className="btn btn-secondary">Отмена</button>

@@ -4,9 +4,11 @@ import { gantt } from 'dhtmlx-gantt';
 import 'dhtmlx-gantt/codebase/dhtmlxgantt.css';
 import apiClient from '../api/apiClient';
 import '../css/GanttPage.css';
+import { useAuth } from '../context/AuthContext'; // Импортируем useAuth
 
 const GanttPage = () => {
     const { contractId } = useParams();
+    const { user } = useAuth(); // Получаем пользователя из контекста
     const ganttContainerRef = useRef(null);
 
     const [isLoading, setIsLoading] = useState(true);
@@ -14,14 +16,18 @@ const GanttPage = () => {
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
+    // Определяем роль пользователя
+    const isCustomer = user && !!user.customer_id;
+
     const markAsChanged = useCallback(() => {
+        if (isCustomer) return; // Заказчики не могут отмечать изменения
         if (!hasUnsavedChanges) {
             setHasUnsavedChanges(true);
         }
-    }, [hasUnsavedChanges]);
+    }, [hasUnsavedChanges, isCustomer]);
 
-    // --- ОБРАБОТЧИК СОХРАНЕНИЯ (сервер ожидает строку) ---
     const handleSave = useCallback(async () => {
+        if (isCustomer) return; // Заказчики не могут сохранять
         setIsSaving(true);
         setError(null);
         try {
@@ -36,30 +42,35 @@ const GanttPage = () => {
         } finally {
             setIsSaving(false);
         }
-    }, [contractId, setHasUnsavedChanges, setIsSaving, setError]);
+    }, [contractId, isCustomer, setHasUnsavedChanges, setIsSaving, setError]);
 
-    // --- Эффект №1: Инициализация и настройка (Выполняется только один раз) ---
     useEffect(() => {
         if (!ganttContainerRef.current) return;
 
-        gantt.config.readonly = false;
+        // --- Настройка в зависимости от роли ---
+        gantt.config.readonly = isCustomer;
+        gantt.config.drag_move = !isCustomer;
+        gantt.config.drag_progress = !isCustomer;
+        gantt.config.drag_resize = !isCustomer;
+        gantt.config.drag_links = !isCustomer;
+        gantt.config.details_on_dblclick = !isCustomer;
+        // ---
+
         gantt.config.date_format = "%Y-%m-%d %H:%i";
         gantt.config.root_id = "root";
-        gantt.config.drag_move = true;
-        gantt.config.drag_progress = true;
-        gantt.config.drag_resize = true;
-        gantt.config.drag_links = true;
-        gantt.config.details_on_dblclick = true;
-
         gantt.plugins({ auto_scheduling: true });
         gantt.config.auto_scheduling = true;
 
-        gantt.config.columns = [
+        const columns = [
             { name: 'text', label: 'Задача', width: '*', tree: true },
             { name: 'start_date', label: 'Начало', align: 'center', width: 90 },
             { name: 'duration', label: 'Длительность', align: 'center', width: 80 },
-            { name: 'add', label: '', width: 44 },
         ];
+
+        if (!isCustomer) {
+            columns.push({ name: 'add', label: '', width: 44 });
+        }
+        gantt.config.columns = columns;
 
         gantt.config.lightbox.sections = [
             { name: "description", height: 70, map_to: "text", type: "textarea", focus: true },
@@ -85,9 +96,8 @@ const GanttPage = () => {
         return () => {
             eventIds.forEach(eventId => gantt.detachEvent(eventId));
         };
-    }, [markAsChanged, handleSave]);
+    }, [isCustomer, markAsChanged, handleSave]);
 
-    // --- Эффект №2: Загрузка данных (Выполняется при смене contractId) ---
     useEffect(() => {
         const fetchGanttData = async () => {
             setIsLoading(true);
@@ -119,8 +129,8 @@ const GanttPage = () => {
         if (contractId) fetchGanttData();
     }, [contractId, error]);
 
-    // --- ОБРАБОТЧИК ДОБАВЛЕНИЯ ЗАДАЧИ ---
     const handleAddTask = () => {
+        if (isCustomer) return;
         const newTask = { text: "Новая задача", start_date: new Date(), duration: 1 };
         gantt.createTask(newTask);
     };
@@ -130,15 +140,17 @@ const GanttPage = () => {
             <div className="gantt-page-header">
                 <h1>Диаграмма Ганта</h1>
                 <div className="header-actions">
-                    {!isLoading && !error && (
+                    {!isCustomer && !isLoading && !error && (
                         <button onClick={handleAddTask} className="btn btn-success">
                             + Добавить задачу
                         </button>
                     )}
-                    {hasUnsavedChanges && <span className="unsaved-changes-indicator">Есть несохраненные изменения</span>}
-                    <button onClick={handleSave} className="btn btn-primary" disabled={!hasUnsavedChanges || isSaving}>
-                        {isSaving ? 'Сохранение...' : 'Сохранить изменения'}
-                    </button>
+                    {!isCustomer && hasUnsavedChanges && <span className="unsaved-changes-indicator">Есть несохраненные изменения</span>}
+                    {!isCustomer && (
+                        <button onClick={handleSave} className="btn btn-primary" disabled={!hasUnsavedChanges || isSaving}>
+                            {isSaving ? 'Сохранение...' : 'Сохранить изменения'}
+                        </button>
+                    )}
                     <Link to={`/dashboard/projects/${contractId}`} className="btn btn-secondary">
                         ← Назад к проекту
                     </Link>
