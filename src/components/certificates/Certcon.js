@@ -10,12 +10,9 @@ const Certcon = () => {
         
         <div className="certificates-wrapper">
             <div className="certificates-container">
-                <img src={sert1} alt="Сертификат 1"/>
-                <img src={sert1} alt="Сертификат 2"/>
-                <img src={sert1} alt="Сертификат 3"/>
-                <img src={sert2} alt="Сертификат 4"/>
-                <img src={sert2} alt="Сертификат 5"/>
-                <img src={sert2} alt="Сертификат 6"/>
+                <img  src="https://copilot.microsoft.com/th/id/BCO.9a8f45c8-faa2-4717-bcb8-33a9db859150.png" alt="Сертификат 1"/>
+                <img  src="https://copilot.microsoft.com/th/id/BCO.54d8eda7-9efc-48d1-803a-89f45057badc.png" alt="Сертификат 2"/>
+                <img src="https://copilot.microsoft.com/th/id/BCO.8bca057b-b24e-4a4f-b7cb-dd8dc072b1d8.png" alt="Сертификат 3"/>
             </div>
         </div>
     </main> 

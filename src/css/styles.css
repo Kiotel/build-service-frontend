@@ -203,21 +203,52 @@ nav ul li a:hover { color: var(--color-primary); }
     padding: 0 20px;
 }
 
-.certificates-container {
+.certificates-container { /* Скорректированная сетка для отображения в виде карточек */
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Увеличенная минимальная ширина для карточек */
     gap: 24px;
 }
 
-.certificates-container img {
-    width: 100%;
-    height: auto;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.3s ease, box-shadow .3s ease;
+.certificate-card-link { /* Стиль для ссылки, оборачивающей карточку */
+    text-decoration: none; /* Убираем подчеркивание у ссылки */
+    color: inherit; /* Наследуем цвет текста */
 }
 
-.certificates-container img:hover { transform: scale(1.03); box-shadow: var(--shadow-md); }
+.certificate-card { /* Имитирует стили article-card */
+    flex: 1; /* Позволяет расти/сжиматься в контексте flex, хотя здесь это в сетке */
+    min-width: 280px; /* Минимальная ширина для карточки */
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+.certificate-card:hover { /* Эффект при наведении на карточку */
+    transform: translateY(-5px); /* Эффект "подъема" */
+    box-shadow: var(--shadow-md); /* Более выраженная тень */
+}
+
+.certificate-image { /* Имитирует стили article-image */
+    height: 200px; /* Фиксированная высота для единообразия, настройте по необходимости */
+    overflow: hidden;
+}
+
+.certificate-image img { /* Изображение внутри карточки */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Гарантирует, что изображение покрывает область без искажений */
+    border-radius: var(--radius-md);
+    /* Прямая тень или трансформация на img не нужна, так как она на карточке */
+    transition: transform 0.3s ease; /* Для потенциального внутреннего эффекта наведения на изображение, если потребуется */
+}
+
+.certificate-card:hover .certificate-image img { /* Опционально: небольшое масштабирование изображения внутри карточки */
+    transform: scale(1.05);
+}
 
 
 .gallery-main {
