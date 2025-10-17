@@ -33,27 +33,12 @@ const CustomerDashboard = () => {
         setError(null);
         
         try {
-            let allProjects = [];
-            let currentPage = 1;
-            let hasMore = true;
+            // Fetch up to 100 projects from the first page (page 0).
+            const response = await apiClient.get(
+                `/api/contracts/byCustomerId/${user.customer_id}?page=0&size=100`
+            );
 
-            // Loop through pages to fetch all projects, accounting for pagination.
-            while (hasMore) {
-                const response = await apiClient.get(
-                    `/api/contracts/byCustomerId/${user.customer_id}?page=${currentPage}`
-                );
-
-                const responseData = response.data.data;
-                const projectsOnPage = responseData.contracts || [];
-                
-                if (projectsOnPage.length > 0) {
-                    allProjects = allProjects.concat(projectsOnPage);
-                    currentPage++;
-                } else {
-                    // Stop when an empty page is returned, indicating no more projects.
-                    hasMore = false;
-                }
-            }
+            const allProjects = response.data.data.contracts || [];
 
             setActiveProjects(allProjects.filter(p => !p.end_date));
             setCompletedProjects(allProjects.filter(p => p.end_date));
