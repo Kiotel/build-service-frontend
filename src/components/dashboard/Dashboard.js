@@ -11,7 +11,8 @@ const CustomerDashboard = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    const [projects, setProjects] = useState([]);
+    const [activeProjects, setActiveProjects] = useState([]);
+    const [completedProjects, setCompletedProjects] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedProjectId, setSelectedProjectId] = useState(null);
@@ -30,7 +31,9 @@ const CustomerDashboard = () => {
         try {
             setIsLoading(true);
             const response = await apiClient.get(`/api/contracts/byCustomerId/${user.customer_id}`);
-            setProjects(response.data.data.contracts || []);
+            const allProjects = response.data.data.contracts || [];
+            setActiveProjects(allProjects.filter(p => !p.end_date));
+            setCompletedProjects(allProjects.filter(p => p.end_date));
         } catch (err) {
             setError("Не удалось загрузить проекты.");
         } finally {
@@ -77,42 +80,54 @@ const CustomerDashboard = () => {
         setIsModalOpen(true);
     };
 
+    const renderProjectList = (projects, title) => (
+        <div className="projects-column">
+            <h3 className="projects-column-title">{title}</h3>
+            {projects.length > 0 ? (
+                <div className="projects-grid">
+                    {projects.map((project) => (
+                        <div
+                            key={project.id}
+                            className={`project-card${selectedProjectId === project.id ? ' selected' : ''}`}
+                            onClick={() => {
+                                setSelectedProjectId(project.id);
+                                navigate(`/dashboard/projects/${project.id}`);
+                            }}
+                            tabIndex={0}
+                            role="button"
+                            onKeyDown={e => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    setSelectedProjectId(project.id);
+                                    navigate(`/dashboard/projects/${project.id}`);
+                                }
+                            }}
+                        >
+                            <span className="project-card-title">{project.name}</span>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p>Нет проектов для отображения.</p>
+            )}
+        </div>
+    );
+
     return (
         <>
             <div className="dashboard-content redesigned">
                 <div className="projects-list-container">
-                    <h2 className="projects-title">МОИ ПРОЕКТЫ</h2>
+                    <div className="projects-header">
+                        <h2 className="projects-title">МОИ ПРОЕКТЫ</h2>
+                        <button className="add-project-btn" onClick={openCreateModal}>+ Согласовать проект</button>
+                    </div>
                     {isLoading && <p>Загрузка проектов...</p>}
                     {error && <p style={{ color: 'red' }}>{error}</p>}
                     {!isLoading && !error && (
-                        <div className="projects-grid">
-                            {projects.length > 0 ? (
-                                projects.map((project) => (
-                                    <div
-                                        key={project.id}
-                                        className={`project-card${selectedProjectId === project.id ? ' selected' : ''}`}
-                                        onClick={() => {
-                                            setSelectedProjectId(project.id);
-                                            navigate(`/dashboard/projects/${project.id}`);
-                                        }}
-                                        tabIndex={0}
-                                        role="button"
-                                        onKeyDown={e => {
-                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                setSelectedProjectId(project.id);
-                                                navigate(`/dashboard/projects/${project.id}`);
-                                            }
-                                        }}
-                                    >
-                                        <span className="project-card-title">{project.name}</span>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>У вас еще нет проектов.</p>
-                            )}
+                        <div className="projects-columns-container">
+                            {renderProjectList(activeProjects, "АКТИВНЫЕ ПРОЕКТЫ")}
+                            {renderProjectList(completedProjects, "ЗАВЕРШЕННЫЕ ПРОЕКТЫ")}
                         </div>
                     )}
-                    <button className="add-project-btn" onClick={openCreateModal}>+ Согласовать проект</button>
                 </div>
                 <section className="actions-panel">
                     <button
