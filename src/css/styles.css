@@ -187,7 +187,7 @@ nav ul li a:hover { color: var(--color-primary); }
     font-weight: 700;
     font-size: 40px;
     text-align: center;
-    margin-top: 30px;
+    margin-top: 24px; /* Уменьшен отступ */
     margin-bottom: 0;
     color: black;
 }
@@ -198,7 +198,7 @@ nav ul li a:hover { color: var(--color-primary); }
 
 .certificates-wrapper {
     max-width: 1400px;
-    margin: 30px auto 0;
+    margin: 24px auto 0; /* Уменьшен отступ */
     overflow: hidden;
     padding: 0 20px;
 }
@@ -258,7 +258,7 @@ nav ul li a:hover { color: var(--color-primary); }
 
 .gallery-wrapper {
     max-width: 1400px;
-    margin: 60px auto 0;
+    margin: 32px auto 0; /* Уменьшен отступ */
     padding: 0 20px;
 }
 
@@ -302,7 +302,7 @@ nav ul li a:hover { color: var(--color-primary); }
     font-weight: 700;
     font-size: 50px;
     text-align: center;
-    margin-top: 60px;
+    margin-top: 32px; /* Уменьшен отступ */
     margin-bottom: 0;
     color: black;
 }
@@ -313,7 +313,7 @@ nav ul li a:hover { color: var(--color-primary); }
     font-weight: 700;
     font-size: 40px;
     text-align: center;
-    margin-top: 30px;
+    margin-top: 24px; /* Уменьшен отступ */
     margin-bottom: 40px;
     color: black;
 }
@@ -429,7 +429,7 @@ a:has(.article-card), a.article-card {
 .reviews-main {
     padding: 0 20px;
     max-width: 1400px;
-    margin: 40px auto;
+    margin: 24px auto; /* Уменьшен отступ */
     position: relative;
 }
 
@@ -564,7 +564,7 @@ a:has(.article-card), a.article-card {
     font-weight: 700;
     font-size: 50px;
     text-align: center;
-    margin-top: 60px;
+    margin-top: 32px; /* Уменьшен отступ */
     margin-bottom: 0;
     color: black;
 }
@@ -663,22 +663,22 @@ a:has(.article-card), a.article-card {
 .registration-container {
     position: relative;
     width: 100%;
-    max-width: 600px;
-    margin: 60px auto;
-    padding: 45px;
+    max-width: 500px; /* Уменьшим максимальную ширину для лучшей адаптивности */
+    margin: 40px auto;
+    padding: 30px;
     background-color: var(--color-surface);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
 }
 
-.registration-title { text-align: center; font-size: 36px; font-weight: bold; margin-bottom: 7.5px; }
+.registration-title { text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 8px; }
 
-.registration-subtitle { text-align: center; font-size: 24px; color: var(--color-muted); margin-bottom: 30px; }
+.registration-subtitle { text-align: center; font-size: 16px; color: var(--color-muted); margin-bottom: 24px; }
 
 .role-selector {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 30px; /* 20 * 1.5 */
+    margin-bottom: 20px;
 }
 
 .role-option {
@@ -687,61 +687,46 @@ a:has(.article-card), a.article-card {
 }
 
 .role-option input[type="radio"] {
-    width: 21px;
-    height: 21px;
-    margin-right: 12px; /* 8 * 1.5 */
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
 }
 
 .role-option label {
-    font-size: 21px; /* 14 * 1.5 */
+    font-size: 16px;
 }
 
 .form-group {
-    margin-bottom: 22.5px; /* 15 * 1.5 */
+    margin-bottom: 20px;
 }
 
 .form-label {
     display: block;
-    margin-bottom: 7.5px; /* 5 * 1.5 */
-    font-size: 21px; /* 14 * 1.5 */
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .form-input {
     width: 100%;
-    padding: 15px;
+    padding: 12px;
     border: 2px solid var(--color-border);
     border-radius: var(--radius-sm);
     background-color: #fff;
-    font-size: 21px;
-    height: 50px;
+    font-size: 16px;
+    height: 44px;
     transition: border-color .2s ease, box-shadow .2s ease;
 }
 .form-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(42,107,243,.1); }
 
-.remember-me {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px; /* 20 * 1.5 */
-}
-
-.remember-me input[type="checkbox"] {
-    width: 21px; /* стандартный размер */
-    height: 21px;
-    margin-right: 12px; /* 8 * 1.5 */
-}
-
-.remember-me label {
-    font-size: 21px; /* 14 * 1.5 */
-}
-
 .register-button {
     width: 100%;
-    padding: 18px; /* 12 * 1.5 */
+    padding: 14px;
     background-color: var(--color-primary);
     color: #fff;
     border: none;
-    border-radius: var(--radius-sm); /* 4 * 1.5 */
-    font-size: 24px; /* 16 * 1.5 */
+    border-radius: var(--radius-sm);
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s, transform .05s ease;
@@ -753,23 +738,23 @@ a:has(.article-card), a.article-card {
 
 .remember-me {
   display: flex;
+  justify-content: space-between; /* Размещаем элементы по краям */
   align-items: center;
-  margin-bottom: 22.5px; /* 15 * 1.5 */
+  margin-bottom: 20px;
 }
 
 .remember-me input[type="checkbox"] {
-  width: 21px;
-  height: 21px;
-  margin-right: 12px; /* 8 * 1.5 */
-  margin-top: 4px;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
 }
 
 .remember-me label {
-  font-size: 21px; /* 14 * 1.5 */
+  font-size: 14px;
 }
 
 .already-registered {
-  font-size: 21px; /* 14 * 1.5 */
+  font-size: 14px;
   color: #2a6bf3;
   text-decoration: none;
   margin-left: 20px; /* Отступ слева от чекбокса */
@@ -786,89 +771,68 @@ a:has(.article-card), a.article-card {
 
 
 /* Стили для центрального блока входа */
-.login-container { position: relative; width: 100%; max-width: 600px; margin: 60px auto; padding: 45px; background-color: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-md); }
+.login-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px; /* Уменьшаем, как у регистрации */
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
 
 .login-title {
     text-align: center;
-    font-size: 36px; /* 24 * 1.5 */
+    font-size: 28px; /* Приводим к стилю регистрации */
     font-weight: bold;
     margin-bottom: 0;
 }
 
-.login-subtitle { text-align: center; font-size: 36px; font-weight: bold; margin-bottom: 30px; color: var(--color-muted); }
-
-.form-group {
-    margin-bottom: 22.5px; /* 15 * 1.5 */
+.login-subtitle {
+    text-align: center;
+    font-size: 16px; /* Приводим к стилю регистрации */
+    font-weight: normal; /* Убираем жирность */
+    margin-bottom: 24px;
+    color: var(--color-muted);
 }
 
-.form-label {
-    display: block;
-    margin-bottom: 7.5px; /* 5 * 1.5 */
-    font-size: 21px; /* 14 * 1.5 */
-}
-
-.form-input {
-    width: 100%;
-    padding: 15px; /* 10 * 1.5 */
-    border: 1.5px solid #ccc; /* 1 * 1.5 */
-    border-radius: 6px; /* 4 * 1.5 */
-    background-color: #c7d8f0;
-    font-size: 21px; /* 14 * 1.5 */
-    height: 50px;
-}
+/* Используем уже существующие стили .form-group, .form-label, .form-input, они общие */
 
 .remember-forgot {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px; /* 20 * 1.5 */
+    margin-bottom: 20px;
 }
 
-.remember-me {
-    display: flex;
-    align-items: center;
-}
-
-.remember-me input[type="checkbox"] {
-    width: 21px;
-    height: 21px;
-    margin-right: 12px; /* 8 * 1.5 */
-}
-
-.remember-me label {
-    font-size: 21px; /* 14 * 1.5 */
-}
+/* Стили для .remember-me уже определены выше и подходят */
 
 .forgot-password {
-    font-size: 21px; /* 14 * 1.5 */
+    font-size: 14px; /* Уменьшаем размер */
     color: #2a6bf3;
     text-decoration: none;
 }
 
-.forgot-password:hover {
-    text-decoration: underline;
-}
+.forgot-password:hover { text-decoration: underline; }
 
 .login-button {
     width: 100%;
-    padding: 18px; /* 12 * 1.5 */
+    padding: 14px; /* Приводим к стилю регистрации */
     background-color: var(--color-primary);
     color: #fff;
     border: none;
-    border-radius: var(--radius-sm); /* 4 * 1.5 */
-    font-size: 24px; /* 16 * 1.5 */
+    border-radius: var(--radius-sm);
+    font-size: 16px; /* Приводим к стилю регистрации */
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s, transform .05s ease;
 }
 
-.login-button:hover { background-color: var(--color-primary-600); }
-.login-button:active { transform: translateY(1px); }
-
 .register-link {
     text-align: center;
-    margin-top: 22.5px; /* 15 * 1.5 */
-    font-size: 21px; /* 14 * 1.5 */
+    margin-top: 20px;
+    font-size: 14px; /* Уменьшаем размер */
 }
 
 .register-link a {
@@ -877,37 +841,31 @@ a:has(.article-card), a.article-card {
     font-weight: bold;
 }
 
-.register-link a:hover {
-    text-decoration: underline;
-}
-
-
-
-
+.register-link a:hover { text-decoration: underline; }
 
 
 /* Стили для центрального блока заказа звонка */
 .callback-container {
     position:static;
     width: 100%;
-    max-width: 600px; /* 400 * 1.5 */
-    margin: 60px auto; /* 40 * 1.5 */
-    padding: 45px; /* 30 * 1.5 */
+    max-width: 500px; /* Уменьшаем для консистентности */
+    margin: 40px auto;
+    padding: 30px;
     background-color: #e0e0e0;
-    border-radius: 12px; /* 8 * 1.5 */
-    box-shadow: 0 3px 15px rgba(0,0,0,0.1); /* 2, 10 * 1.5 */
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
     font-family: Arial, sans-serif;
 }
 
 .callback-title {
     text-align: center;
-    font-size: 36px;
+    font-size: 28px; /* Уменьшаем */
     font-weight: bold;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .form-group {
-    margin-bottom: 22.5px;
+    margin-bottom: 20px;
 }
 
 .form-input {
@@ -915,8 +873,8 @@ a:has(.article-card), a.article-card {
     padding: 15px;
     border: 1.5px solid #ccc;
     border-radius: 6px;
-    background-color: white;
-    font-size: 21px;
+    background-color: #fff;
+    font-size: 16px; /* Уменьшаем */
     height: 50px; /* примерная высота */
     text-align: center;
 }
@@ -924,18 +882,18 @@ a:has(.article-card), a.article-card {
 .consent-checkbox {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 22.5px;
+    margin-bottom: 20px;
 }
 
 .consent-checkbox input[type="checkbox"] {
-    width: 21px;
-    height: 21px;
-    margin-right: 12px;
+    width: 16px; /* Уменьшаем */
+    height: 16px;
+    margin-right: 8px;
     margin-top: 4px;
 }
 
 .consent-checkbox label {
-    font-size: 21px;
+    font-size: 14px; /* Уменьшаем */
     line-height: 1.4;
 }
 
@@ -950,12 +908,12 @@ a:has(.article-card), a.article-card {
 
 .send-button {
     width: 100%;
-    padding: 18px;
+    padding: 14px; /* Уменьшаем */
     background-color: var(--color-accent);
     color: #111827;
     border: none;
     border-radius: var(--radius-sm);
-    font-size: 24px;
+    font-size: 16px; /* Уменьшаем */
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s, transform .05s ease;
@@ -972,13 +930,14 @@ a:has(.article-card), a.article-card {
 
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around; /* Даем больше пространства */
   align-items: center;
-  padding: 30px 60px;
+  padding: 15px 20px; /* Уменьшаем отступы */
   background-color: white;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   font-family: Arial, sans-serif;
-  height: 90px;
+  height: auto; /* Автоматическая высота */
+  flex-wrap: wrap; /* Разрешаем перенос элементов */
 }
 
 .navbar-logo a {
@@ -995,7 +954,7 @@ a:has(.article-card), a.article-card {
 }
 
 .navbar-links a {
-  font-size: 36px;
+  font-size: 20px; /* Значительно уменьшаем шрифт */
   color: black;
   text-decoration: none;
   transition: color 0.3s;
@@ -1013,10 +972,10 @@ a:has(.article-card), a.article-card {
 .register-button {
   background-color: #f5cc4a;
   color: #0e0d0d;
-  padding: 20px 40px;
+  padding: 10px 20px; /* Уменьшаем кнопку */
   border-radius: 8px;
   font-weight: bold;
-  font-size: 36px;
+  font-size: 20px; /* Уменьшаем шрифт */
   text-decoration: none;
   transition: background-color 0.3s;
   display: flex;
@@ -1043,9 +1002,9 @@ a:has(.article-card), a.article-card {
 .callback-button {
   background-color: #f5cc4a;
   color: #131211;
-  padding: 20px 40px; /* 10*2, 20*2 */
-  border-radius: 8px; /* 20*2 */
-  font-size: 36px; /* 18 * 2 */
+  padding: 10px 20px; /* Уменьшаем */
+  border-radius: 8px;
+  font-size: 18px; /* Уменьшаем */
   font-weight: bold;
   text-decoration: none;
   transition: background-color 0.3s;
@@ -1058,6 +1017,23 @@ a:has(.article-card), a.article-card {
 .callback-button:hover {
   background-color: #e5bc3a;
 }
+
+@media (max-width: 1200px) {
+    .navbar-links {
+        gap: 20px;
+    }
+    .navbar-links a {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 992px) {
+    .navbar {
+        justify-content: space-between;
+    }
+    .navbar-links { display: none; } /* Скрываем ссылки в меню на мобильных, предполагая наличие бургер-меню в будущем */
+}
+
 .call-page {
     padding: 40px 20px;
     min-height: calc(100vh - 90px);
