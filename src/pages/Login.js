@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../context/AuthContext';
 import useSafeNavigate from '../utils/useSafeNavigate';
@@ -7,13 +7,30 @@ import useSafeNavigate from '../utils/useSafeNavigate';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('customer'); // Добавлено состояние для роли
-    const [error, setError] = useState('');
+    const [role, setRole] = useState('customer');
+    const [error, setError] = useState(''); // Для ошибок сервера
+    const [formErrors, setFormErrors] = useState({}); // Для ошибок валидации полей
+    const [isFormValid, setIsFormValid] = useState(false);
+
     const safeNavigate = useSafeNavigate();
     const { login } = useAuth();
 
+    // Эффект для проверки валидности всей формы при изменении полей
+    useEffect(() => {
+        const errors = {};
+        if (!email.includes('@')) errors.email = 'Email должен содержать символ @';
+        if (password.length < 8) errors.password = 'Пароль должен быть не менее 8 символов';
+
+        setFormErrors(errors);
+        setIsFormValid(Object.keys(errors).length === 0);
+    }, [email, password]);
+
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (!isFormValid) {
+            setError('Пожалуйста, исправьте ошибки в форме.');
+            return;
+        }
         setError('');
 
         try {
@@ -25,9 +42,7 @@ const Login = () => {
             const { token } = loginResponse.data.data;
 
             if (token) {
-                await login(token); // Выполняем вход, чтобы сохранить токен и данные
-
-                // Перенаправляем на основе выбранной роли, а не данных пользователя
+                await login(token);
                 const targetDashboard = role === 'customer' ? '/customer-dashboard' : '/brigade-dashboard';
                 safeNavigate(targetDashboard, { replace: true });
             }
@@ -44,8 +59,7 @@ const Login = () => {
                 <div className="registration-title">ВХОД</div>
                 <div className="registration-subtitle">В BUILDSERVICE</div>
                 
-                {/* Добавлен переключатель ролей */}
-                <form onSubmit={handleLogin} autoComplete="off">
+                <form onSubmit={handleLogin} autoComplete="off" noValidate>
                     <div className="role-selector" style={{marginBottom: '20px'}}>
                         <div className="role-option">
                             <input type="radio" id="customer" name="role" value="customer" checked={role === 'customer'} onChange={() => setRole('customer')} />
@@ -59,12 +73,14 @@ const Login = () => {
 
                     <div className="form-group">
                         <label htmlFor="email" className="form-label">Электронная почта*</label>
-                        <input type="email" id="email" name="email" className="form-input" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="off" />
+                        <input type="email" id="email" name="email" className={`form-input ${formErrors.email ? 'invalid' : ''}`} required value={email} onChange={(e) => setEmail(e.target.value)} />
+                        {formErrors.email && <p className="validation-error-message">{formErrors.email}</p>}
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="password" className="form-label">Пароль*</label>
-                        <input type="password" id="password" name="password" className="form-input"     required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
+                        <input type="password" id="password" name="password" className={`form-input ${formErrors.password ? 'invalid' : ''}`} required value={password} onChange={(e) => setPassword(e.target.value)} />
+                        {formErrors.password && <p className="validation-error-message">{formErrors.password}</p>}
                     </div>
 
                     {error && <p className="error-message" style={{color: 'red', textAlign: 'center'}}>{error}</p>}
@@ -73,7 +89,7 @@ const Login = () => {
                         {/* Функционал "Запомнить меня" можно реализовать позже */}
                     </div>
 
-                    <button type="submit" className="register-button">ВОЙТИ</button>
+                    <button type="submit" className="login-button" disabled={!isFormValid}>ВОЙТИ</button>
 
                     <Link to="/signup" className="already-registered" style={{display: 'block', textAlign: 'center', marginTop: '15px'}}>
                         Еще не зарегистрированы?

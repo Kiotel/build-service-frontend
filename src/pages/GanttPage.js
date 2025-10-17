@@ -13,7 +13,6 @@ const GanttPage = () => {
     const [error, setError] = useState(null);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
-    const [isEmpty, setIsEmpty] = useState(false);
 
     const markAsChanged = useCallback(() => {
         if (!hasUnsavedChanges) {
@@ -21,14 +20,31 @@ const GanttPage = () => {
         }
     }, [hasUnsavedChanges]);
 
+    // --- ОБРАБОТЧИК СОХРАНЕНИЯ (сервер ожидает строку) ---
+    const handleSave = useCallback(async () => {
+        setIsSaving(true);
+        setError(null);
+        try {
+            const currentGanttState = gantt.serialize();
+            const stringPayload = JSON.stringify(currentGanttState);
+
+            await apiClient.put(`/api/contracts/gantt/${contractId}`, { data: stringPayload });
+            setHasUnsavedChanges(false);
+        } catch (err) {
+            console.error("Gantt: Failed to save data:", err);
+            setError("Ошибка при сохранении. Проверьте данные и попробуйте снова.");
+        } finally {
+            setIsSaving(false);
+        }
+    }, [contractId, setHasUnsavedChanges, setIsSaving, setError]);
+
     // --- Эффект №1: Инициализация и настройка (Выполняется только один раз) ---
     useEffect(() => {
         if (!ganttContainerRef.current) return;
 
-        // Конфигурация диаграммы
         gantt.config.readonly = false;
         gantt.config.date_format = "%Y-%m-%d %H:%i";
-        gantt.config.root_id = "root"; // Позволяет создавать корневые задачи
+        gantt.config.root_id = "root";
         gantt.config.drag_move = true;
         gantt.config.drag_progress = true;
         gantt.config.drag_resize = true;
@@ -52,41 +68,30 @@ const GanttPage = () => {
         gantt.locale.labels.section_description = "Название задачи";
         gantt.locale.labels.section_time = "Период";
 
-        // Привязываем обработчики событий
         const eventIds = [
             gantt.attachEvent('onAfterTaskAdd', markAsChanged),
             gantt.attachEvent('onAfterTaskUpdate', markAsChanged),
-            gantt.attachEvent('onAfterTaskDelete', function(id) {
+            gantt.attachEvent('onAfterTaskDelete', (id) => {
                 markAsChanged();
-                // Получаем актуальное состояние диаграммы
-                const currentGanttState = gantt.serialize();
-                // Проверяем, что задачи с id нет в массиве
-                if (!currentGanttState.data.find(task => String(task.id) === String(id))) {
-                    handleSave(); // Сохраняем только если задача реально удалена
-                } else {
-                    setError('Ошибка: задача не была удалена из локального состояния.');
-                }
+                handleSave();
             }),
             gantt.attachEvent('onAfterLinkAdd', markAsChanged),
             gantt.attachEvent('onAfterLinkUpdate', markAsChanged),
             gantt.attachEvent('onAfterLinkDelete', markAsChanged),
         ];
 
-        // Инициализируем диаграмму в DOM-элементе
         gantt.init(ganttContainerRef.current);
 
-        // Функция очистки при размонтировании компонента
         return () => {
             eventIds.forEach(eventId => gantt.detachEvent(eventId));
         };
-    }, [markAsChanged]);
+    }, [markAsChanged, handleSave]);
 
     // --- Эффект №2: Загрузка данных (Выполняется при смене contractId) ---
     useEffect(() => {
         const fetchGanttData = async () => {
             setIsLoading(true);
             setError(null);
-            setIsEmpty(false);
             setHasUnsavedChanges(false);
             try {
                 const response = await apiClient.get(`/api/contracts/gantt/${contractId}`);
@@ -94,36 +99,15 @@ const GanttPage = () => {
 
                 gantt.clearAll();
 
-                // Server may now return a plain string with JSON inside. Support both string and object.
                 if (typeof raw === 'string') {
                     const trimmed = raw.trim();
-                    if (trimmed.length === 0) {
-                        setIsEmpty(true);
-                    } else {
-                        try {
-                            const parsed = JSON.parse(trimmed);
-                            if (parsed && Array.isArray(parsed.data)) {
-                                if (parsed.data.length === 0) {
-                                    setIsEmpty(true);
-                                } else {
-                                    gantt.parse(parsed);
-                                }
-                            } else {
-                                throw new Error('Неверный формат данных диаграммы (строка)');
-                            }
-                        } catch (parseErr) {
-                            console.error('Gantt: Failed to parse string data:', parseErr);
-                            setError('Не удалось распарсить данные диаграммы.');
-                        }
+                    if (trimmed.length > 0) {
+                        gantt.parse(JSON.parse(trimmed));
                     }
                 } else if (raw && Array.isArray(raw.data)) {
-                    if (raw.data.length === 0) {
-                        setIsEmpty(true);
-                    } else {
+                    if (raw.data.length > 0) {
                         gantt.parse(raw);
                     }
-                } else {
-                    throw new Error('Неверный формат данных диаграммы');
                 }
             } catch (e) {
                 console.error("Gantt: Failed to load data:", e);
@@ -133,35 +117,12 @@ const GanttPage = () => {
             }
         };
         if (contractId) fetchGanttData();
-    }, [contractId]);
+    }, [contractId, error]);
 
     // --- ОБРАБОТЧИК ДОБАВЛЕНИЯ ЗАДАЧИ ---
     const handleAddTask = () => {
         const newTask = { text: "Новая задача", start_date: new Date(), duration: 1 };
-        const newTaskId = gantt.createTask(newTask);
-        gantt.showTask(newTaskId);
-        gantt.open(newTaskId);
-        setIsEmpty(false);
-    };
-
-    // --- ОБРАБОТЧИК СОХРАНЕНИЯ (сервер ожидает строку) ---
-    const handleSave = async () => {
-        setIsSaving(true);
-        setError(null);
-        try {
-            // Получаем текущее состояние диаграммы в виде объекта { data, links }
-            const currentGanttState = gantt.serialize();
-            // Отправляем строковое представление этого объекта
-            const stringPayload = JSON.stringify(currentGanttState);
-
-            await apiClient.put(`/api/contracts/gantt/${contractId}`, { data: stringPayload });
-            setHasUnsavedChanges(false);
-        } catch (err) {
-            console.error("Gantt: Failed to save data:", err);
-            setError("Ошибка при сохранении. Проверьте данные и попробуйте снова.");
-        } finally {
-            setIsSaving(false);
-        }
+        gantt.createTask(newTask);
     };
 
     return (
