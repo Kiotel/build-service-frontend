@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Certificates from "./pages/Certificates";
 import Gallery from "./pages/Gallery";
 import Articles from "./pages/Articles";
+import ArticlePage from "./pages/ArticlePage"; // <-- ИМПОРТ НОВОЙ СТРАНИЦЫ
 import Reviews from "./pages/Reviews";
 import About from "./pages/About";
 import Call from "./pages/Call";
@@ -32,7 +33,6 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                {/* The layout wrappers are now handled by the layout components themselves */}
                 <Routes>
                     <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
                         <Route path="/customer-dashboard" element={<CustomerDashboard />} />
@@ -46,6 +46,7 @@ function App() {
                         <Route path="certificates" element={<Certificates />} />
                         <Route path="gallery" element={<Gallery />} />
                         <Route path="articles" element={<Articles />} />
+                        <Route path="articles/:id" element={<ArticlePage />} /> {/* <-- НОВЫЙ МАРШРУТ */}
                         <Route path="reviews" element={<Reviews />} />
                         <Route path="about" element={<About />} />
                         <Route path="call" element={<Call />} />

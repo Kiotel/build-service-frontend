@@ -331,6 +331,7 @@ nav ul li a:hover { color: var(--color-primary); }
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    text-decoration: none;
 }
 
 .article-content h3 {
@@ -385,8 +386,11 @@ nav ul li a:hover { color: var(--color-primary); }
     transform: none;
 }
 
-.article-content {
-    padding-bottom: 20px;
+/* Remove underline from links that wrap article cards */
+/* This rule targets any link that has an article-card inside it,
+   or any link that IS an article-card itself. */
+a:has(.article-card), a.article-card {
+    text-decoration: none;
 }
 
 
@@ -674,7 +678,7 @@ nav ul li a:hover { color: var(--color-primary); }
 .form-input {
     width: 100%;
     padding: 15px;
-    border: 1.5px solid var(--color-border);
+    border: 2px solid var(--color-border);
     border-radius: var(--radius-sm);
     background-color: #fff;
     font-size: 21px;
